@@ -1,0 +1,50 @@
+# =========================================================
+#   Makefile.vc — MSVC 9.0 / nmake example
+# =========================================================
+# Build:
+#   nmake /f Makefile.vc
+# Clean:
+#   nmake /f Makefile.vc clean
+# =========================================================
+
+# --- Tools ------------------------------------------------
+CC = cl
+LIBTOOL = lib
+LINK = link
+
+# --- Flags ------------------------------------------------
+CFLAGS = /nologo /O2 /W3 /EHsc
+LDFLAGS = /nologo
+LIBFLAGS = /nologo
+
+# --- Sources ----------------------------------------------
+LIBSRCS = lfile1.c lfile2.c lfile3.c
+LIBOBJS = $(LIBSRCS:.c=.obj)
+
+# Build a static library named func.lib
+LIBTARGET = func.lib
+
+# Executables that use func.lib
+EXESRCS = mfile1.c mfile2.c
+EXETARGETS = $(EXESRCS:.c=.exe)
+
+# --- Default target ---------------------------------------
+all: $(LIBTARGET) $(EXETARGETS)
+
+# --- Library build rule -----------------------------------
+$(LIBTARGET): $(LIBOBJS)
+	$(LIBTOOL) $(LIBFLAGS) /OUT:$@ $(LIBOBJS)
+
+# --- Executables build rule -------------------------------
+# Use a pattern substitution to get corresponding .obj names
+# for each .exe, e.g. mfile1.obj -> mfile1.exe
+{$(EXESRCS:.c=.obj)}.obj{}.exe:
+	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LIBTARGET)
+
+# --- Compile all .c to .obj -------------------------------
+.c.obj:
+	$(CC) $(CFLAGS) /c $<
+
+# --- Clean target -----------------------------------------
+clean:
+	del /Q *.obj *.exe *.lib *.pdb *.ilk 2>nul
