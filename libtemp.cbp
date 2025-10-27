@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="libtemp" />
+		<Option makefile="makefile.vc" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="msvc8" />
+		<Build>
+			<Target title="all">
+				<Option output="mfile1" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="msvc8" />
+				<ExtraCommands>
+					<Add before="vcvarsall.bat" />
+				</ExtraCommands>
+				<MakeCommands>
+					<Build command="$make /f $makefile $target" />
+					<CompileFile command="$make /f $makefile $file" />
+					<Clean command="$make /f $makefile clean$target" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make /q /f $makefile $target" />
+					<SilentBuild command="$make /f $makefile $target &gt; $(CMD_NULL)" />
+				</MakeCommands>
+			</Target>
+			<Target title="clean">
+				<Option output="libtemp" prefix_auto="1" extension_auto="1" />
+				<Option type="1" />
+				<Option compiler="msvc8" />
+				<Option use_console_runner="0" />
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="/W3" />
+		</Compiler>
+		<Unit filename="lfile1.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="lfile1.h">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="mfile1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

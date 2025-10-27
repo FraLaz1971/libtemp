@@ -4,7 +4,6 @@ CFLAGS=
 LDFLAGS=
 LIBS=
 RM=del /q /f
-
 all: mfile1.exe
 lfile1.obj: lfile1.c
 	$(CC) /c $**
@@ -14,3 +13,4 @@ mfile1.exe: mfile1.obj lfile1.obj
 	$(LD) /out:$@ $**
 clean:
 	$(RM) *.obj mfile1.exe
+cleanall: clean
