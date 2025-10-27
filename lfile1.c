@@ -84,7 +84,7 @@ void getUTC(char *bcstrt, double ts){
     // Variable to store current time
     time_t t;
 	time_t mytimet=(time_t)mytime; /* input time seconds */
-    double bcoffset = TIMEOFFS;
+        double bcoffset = TIMEOFFS;
 	double bctime=mytime+bcoffset;
 	time_t bctimet=(time_t)bctime;
 	time_t bt;
@@ -117,7 +117,66 @@ void getUTC(char *bcstrt, double ts){
   if (debug) printf("getBC_UTC():BC Tm str: %s\n",bcstrt);
 	return;
 }
+/* return unix time seconds given UTC datetime string*/
 int getSecs(double *ts, char *bcstrt){
+  int year,month,day,hour,min,sec,i;
+  char smon[3],sday[3],shour[3],smin[3],ssec[3];
+  struct tm *tmp; time_t t,s;
+  year=2025;month=10;day=27;hour=18;min=23;sec=34;
+  tmp->tm_year=year-1900;
+  tmp->tm_mon=month-1;
+  tmp->tm_mday=day;
+  tmp->tm_hour=hour;
+  tmp->tm_min=min;
+  tmp->tm_sec=sec;
+  tmp->tm_yday=0;
+  for(i=0;i<=tmp->tm_mon;i++){
+   switch (i) {
+     case 0:
+     tmp->tm_yday+=31;
+     break;
+     case 1:
+     tmp->tm_yday+=28;
+     break;
+     case 2:
+     tmp->tm_yday+=31;
+     break;
+     case 3:
+     tmp->tm_yday+=30;
+     break;
+     case 4:
+     tmp->tm_yday+=31;
+     break;
+     case 5:
+     tmp->tm_yday+=30;
+     break;
+     case 6:
+     tmp->tm_yday+=31;
+     break;
+     case 7:
+     tmp->tm_yday+=31;
+     break;
+     case 8:
+     tmp->tm_yday+=30;
+     break;
+     case 9:
+     tmp->tm_yday+=31;
+     break;
+     case 10:
+     tmp->tm_yday+=30;
+     break;
+     case 11:
+     tmp->tm_yday+=31;
+     break;
+     default:
+     puts("illegal month number");
+   }
+  }
+/*  t = mktime(tmp); */
+//  printf("tm->yday: %d\n",tmp->tm_yday);
+  *ts = (tmp->tm_year-70)*86400*365.25+tmp->tm_yday
+  *86400+tmp->tm_hour*3600+tmp->tm_min*60+tmp->tm_sec;
+  printf("ts: %lf\n",*ts);
   return 0;
 }
 int print_log(char *msg, struct LOG *log, FILE *lfp){
@@ -147,3 +206,35 @@ int destroy_db(struct TM *tm){
   return 0;
 }
 
+/*
+
+struct tm {
+    // seconds,  range 0 to 59
+    int tm_sec;
+
+    // minutes, range 0 to 59
+    int tm_min;
+
+    // hours, range 0 to 23
+    int tm_hour;
+
+    // day of the month, range 1 to 31
+    int tm_mday;
+
+    // month, range 0 to 11
+    int tm_mon;
+
+    // The number of years since 1900
+    int tm_year;
+
+    // day of the week, range 0 to 6
+    int tm_wday;
+
+    // day in the year, range 0 to 365
+    int tm_yday;
+
+    // daylight saving time
+    int tm_isdst;
+}
+
+*/

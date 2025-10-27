@@ -5,13 +5,14 @@
 int main(int argc, char **argv){
   int res;
   char *fname, message[1024]="alive";
+  char dtbuf[24]="2025-10-27T18:27:33";
   FILE *ifp=NULL;
   FILE *lfp=NULL;
   struct TM *tm=NULL;
   struct LOG *log=NULL;
   char *logfile="pipeline.log";
   char test1[32];
-  double tv;
+  double tv,sec;
   if(argc<2){
     fprintf(stderr,"usage:%s <inputfile.txt>\n",argv[0]);
     return 1;
@@ -39,6 +40,9 @@ int main(int argc, char **argv){
     res=print_log(message, log, lfp);
     printf("res: %d\n",res);
     if(!res){perror("main() error in printing on file log message");exit(1);}
+    res=getSecs(&sec,(char *)dtbuf);
+    getUTC(test1,sec);
+    printf("main()2 UTC: %s\n",test1);
   fclose(ifp);
   fclose(lfp);
   free(log);
