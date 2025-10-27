@@ -119,18 +119,20 @@ void getUTC(char *bcstrt, double ts){
 }
 /* return unix time seconds given UTC datetime string*/
 int getSecs(double *ts, char *bcstrt){
-  int year,month,day,hour,min,sec,i;
+  int year,month,day,hour,min,sec,i,res;
   char smon[3],sday[3],shour[3],smin[3],ssec[3];
   struct tm *tmp; time_t t,s;
-  year=2025;month=10;day=27;hour=18;min=23;sec=34;
+  res=sscanf(bcstrt,"%4d-%2d-%2dT%2d:%2d:%2d",
+  &year,&month,&day,&hour,&min,&sec);
+  //year=2025;month=10;day=27;hour=18;min=23;sec=34;
   tmp->tm_year=year-1900;
   tmp->tm_mon=month-1;
   tmp->tm_mday=day;
-  tmp->tm_hour=hour;
+  tmp->tm_hour=hour+5;
   tmp->tm_min=min;
   tmp->tm_sec=sec;
   tmp->tm_yday=0;
-  for(i=0;i<=tmp->tm_mon;i++){
+  for(i=0;i<tmp->tm_mon;i++){
    switch (i) {
      case 0:
      tmp->tm_yday+=31;
@@ -173,6 +175,9 @@ int getSecs(double *ts, char *bcstrt){
    }
   }
 /*  t = mktime(tmp); */
+  tmp->tm_yday+=day;
+  tmp->tm_yday--;
+//  printf("tm->hour: %d\n",tmp->tm_hour);
 //  printf("tm->yday: %d\n",tmp->tm_yday);
   *ts = (tmp->tm_year-70)*86400*365.25+tmp->tm_yday
   *86400+tmp->tm_hour*3600+tmp->tm_min*60+tmp->tm_sec;
@@ -182,11 +187,11 @@ int getSecs(double *ts, char *bcstrt){
 int print_log(char *msg, struct LOG *log, FILE *lfp){
 	time_t s; /* seconds since 1970-01-01T00:00:00 */
 	int year,mon,day,hour,min,sec;
-    char smon[3],sday[3],shour[3],smin[3],ssec[3];
+        char smon[3],sday[3],shour[3],smin[3],ssec[3];
 	char *dt; char msgbuf[2048]; int res;
 	strcpy(log->msg,msg);
 	    // Get current time
-    s = time(NULL);
+        s = time(NULL);
 	getUTC(log->utc,s);
 	if (debug) printf("print_log() utc: %s\n",log->utc);
 	if (debug) printf("print_log() host: %s\n",log->host);

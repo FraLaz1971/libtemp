@@ -20,7 +20,7 @@ int main(int argc, char **argv){
   tm=(struct TM*)malloc(DBSIZE*sizeof(struct TM));
   log=(struct LOG*)malloc(sizeof(struct LOG));
     res = init_db(tm, log);
-	if(res){perror("main() error in initing the structures");exit(1);}
+    if(res){perror("main() error in initing the structures");exit(1);}
     fname=argv[1];
     ifp = fopen(fname, "r");
     lfp = fopen(logfile, "a");
@@ -29,7 +29,7 @@ int main(int argc, char **argv){
     if(res){perror("main() error in populating the database");exit(1);}
     res = dump_db(tm, stdout);
     if(res){perror("main() error in dumping the database");exit(1);}
-    tv=10.0;
+    tv=1761585814.0;
     getUTC(test1,tv);
     printf("main() UTC: %s\n",test1);
     if (argc>2) strcpy(message, argv[2]);
