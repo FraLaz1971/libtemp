@@ -4,7 +4,7 @@
 #include "lfile1.h"
 int main(int argc, char **argv){
   int res;
-  char *fname, message[1024];
+  char *fname, message[1024]="alive";
   FILE *ifp=NULL;
   FILE *lfp=NULL;
   struct TM *tm=NULL;
@@ -31,7 +31,7 @@ int main(int argc, char **argv){
     tv=10.0;
     getUTC(test1,tv);
     printf("main() UTC: %s\n",test1);
-    strcpy(message, argv[2]);
+    if (argc>2) strcpy(message, argv[2]);
     strcpy(log->caller,"mfile1::main()");
     res=print_log(message, log, stdout);
     printf("res: %d\n",res);

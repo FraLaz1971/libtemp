@@ -37,6 +37,7 @@ int populate_db(struct TM *tm, FILE *ifp);
 int dump_db(struct TM *tm, FILE *ofp);
 void leftpad(char *s,char c);
 void getUTC(char *bcstrt, double ts);
+int getSecs(double *ts, char *bcstrt);
 int get_log_date();
 int get_log_host();
 int get_log_caller();

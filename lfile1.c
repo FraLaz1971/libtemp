@@ -117,7 +117,9 @@ void getUTC(char *bcstrt, double ts){
   if (debug) printf("getBC_UTC():BC Tm str: %s\n",bcstrt);
 	return;
 }
-
+int getSecs(double *ts, char *bcstrt){
+  return 0;
+}
 int print_log(char *msg, struct LOG *log, FILE *lfp){
 	time_t s; /* seconds since 1970-01-01T00:00:00 */
 	int year,mon,day,hour,min,sec;
@@ -137,16 +139,7 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
 	res = sprintf(msgbuf,"%s%c%s%c%s%c%s%c%s%s",(char *)log->utc,log->FS,(char *)log->host, log->FS,
 	(char *)log->caller,log->FS,(char *)log->level,log->FS,(char *)log->msg,(char *)log->RS);
 	fprintf(lfp,"%s",msgbuf);
-	/*
-	char utc[24];
-	char host[24];
-	char caller[24];
-	char level[8];
-	char msg[1024];
-	char FS;
-    char RS[2];
-
-} */
+  return res;
 }
 int destroy_db(struct TM *tm){
   fprintf(stderr,"destroy_db() going to free memory of the structure array\n");
