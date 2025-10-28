@@ -23,6 +23,7 @@ int read_curve_2D(const char *ifname,struct curve2D *curve, int ftype){
 	        if (debug) fprintf(stderr,"read_curve_2D() x[%d]:%d y[%d]:%d\n",cnt,curve->x[cnt],cnt,curve->y[cnt]);
 	        cnt++;
 		}
+		curve->size = cnt;
 		fclose(ifp);
 	}
 	return 0; 
