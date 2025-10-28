@@ -121,66 +121,66 @@ void getUTC(char *bcstrt, double ts){
 int getSecs(double *ts, char *bcstrt){
   int year,month,day,hour,min,sec,i,res;
   char smon[3],sday[3],shour[3],smin[3],ssec[3];
-  struct tm *tmp; time_t t,s;
+  struct tm tmp; time_t t,s;
   res=sscanf(bcstrt,"%4d-%2d-%2dT%2d:%2d:%2d",
   &year,&month,&day,&hour,&min,&sec);
   //year=2025;month=10;day=27;hour=18;min=23;sec=34;
-  tmp->tm_year=year-1900;
-  tmp->tm_mon=month-1;
-  tmp->tm_mday=day;
-  tmp->tm_hour=hour+5;
-  tmp->tm_min=min;
-  tmp->tm_sec=sec;
-  tmp->tm_yday=0;
-  for(i=0;i<tmp->tm_mon;i++){
+  tmp.tm_year=year-1900;
+  tmp.tm_mon=month-1;
+  tmp.tm_mday=day;
+  tmp.tm_hour=hour;
+  tmp.tm_min=min;
+  tmp.tm_sec=sec;
+/*  tmp.tm_yday=0;
+  for(i=0;i<tmp.tm_mon;i++){
    switch (i) {
      case 0:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      case 1:
-     tmp->tm_yday+=28;
+     tmp.tm_yday+=28;
      break;
      case 2:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      case 3:
-     tmp->tm_yday+=30;
+     tmp.tm_yday+=30;
      break;
      case 4:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      case 5:
-     tmp->tm_yday+=30;
+     tmp.tm_yday+=30;
      break;
      case 6:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      case 7:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      case 8:
-     tmp->tm_yday+=30;
+     tmp.tm_yday+=30;
      break;
      case 9:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      case 10:
-     tmp->tm_yday+=30;
+     tmp.tm_yday+=30;
      break;
      case 11:
-     tmp->tm_yday+=31;
+     tmp.tm_yday+=31;
      break;
      default:
      puts("illegal month number");
    }
-  }
-/*  t = mktime(tmp); */
-  tmp->tm_yday+=day;
-  tmp->tm_yday--;
-//  printf("tm->hour: %d\n",tmp->tm_hour);
-//  printf("tm->yday: %d\n",tmp->tm_yday);
-  *ts = (tmp->tm_year-70)*86400*365.25+tmp->tm_yday
-  *86400+tmp->tm_hour*3600+tmp->tm_min*60+tmp->tm_sec;
+  } */
+  t = mktime(&tmp);
+  tmp.tm_yday+=day;
+  tmp.tm_yday--;
+  printf("tmp.hour: %d\n",tmp.tm_hour);
+  printf("tmp.yday: %d\n",tmp.tm_yday);
+  *ts = (tmp.tm_year-70)*86400*365.25+tmp.tm_yday
+  *86400+tmp.tm_hour*3600+tmp.tm_min*60+tmp.tm_sec;
   printf("ts: %lf\n",*ts);
   return 0;
 }
