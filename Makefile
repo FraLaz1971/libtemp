@@ -7,13 +7,17 @@ RM=rm -rf
 
 .PHONY: all clean
 
-all: mfile1
+all: mfile1 mfile2
 
 lfile1.o: lfile1.c
 	$(CC) -c $<
 mfile1.o: mfile1.c
 	$(CC) -c $<
+mfile2.o: mfile2.c
+	$(CC) -c $<
 mfile1: mfile1.o lfile1.o
 	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile2: mfile2.o lfile1.o lfile2.o
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
 clean:
-	$(RM) *.o mfile1
+	$(RM) *.o mfile1 mfile2

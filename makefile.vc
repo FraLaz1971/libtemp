@@ -4,13 +4,17 @@ CFLAGS=
 LDFLAGS=
 LIBS=
 RM=del /q /f
-all: mfile1.exe
+all: mfile1.exe mfile2.exe
 lfile1.obj: lfile1.c
 	$(CC) /c $**
 mfile1.obj: mfile1.c
 	$(CC) /c $**
+mfile2.obj: mfile2.c
+	$(CC) /c $**
 mfile1.exe: mfile1.obj lfile1.obj
 	$(LD) /out:$@ $**
+mfile2.exe: mfile2.obj lfile1.obj
+	$(LD) /out:$@ $**
 clean:
-	$(RM) *.obj mfile1.exe
+	$(RM) *.obj mfile1.exe mfile2.exe
 cleanall: clean
