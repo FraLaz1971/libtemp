@@ -1,0 +1,134 @@
+Here are C functions to convert between Unix epoch seconds and datetime strings:
+
+## 1. Seconds since epoch to datetime string
+
+```c
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+
+void epoch_to_datetime(time_t epoch_seconds, char* buffer, size_t buffer_size) {
+    struct tm* timeinfo;
+    
+    // Convert epoch seconds to struct tm
+    timeinfo = localtime(&epoch_seconds);
+    
+    // Format as yyyy-MM-ddThh:mm:ss
+    strftime(buffer, buffer_size, "%Y-%m-%dT%H:%M:%S", timeinfo);
+}
+
+// Usage example
+int main() {
+    time_t current_time = time(NULL);
+    char datetime[20];
+    
+    epoch_to_datetime(current_time, datetime, sizeof(datetime));
+    printf("Current datetime: %s\n", datetime);
+    
+    return 0;
+}
+```
+
+## 2. Datetime string to seconds since epoch
+
+```c
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+
+time_t datetime_to_epoch(const char* datetime_str) {
+    struct tm timeinfo = {0};
+    
+    // Parse the datetime string (yyyy-MM-ddThh:mm:ss format)
+    if (sscanf(datetime_str, "%d-%d-%dT%d:%d:%d",
+               &timeinfo.tm_year, &timeinfo.tm_mon, &timeinfo.tm_mday,
+               &timeinfo.tm_hour, &timeinfo.tm_min, &timeinfo.tm_sec) != 6) {
+        return -1; // Parsing failed
+    }
+    
+    // Adjust struct tm values (tm_year is years since 1900, tm_mon is 0-11)
+    timeinfo.tm_year -= 1900;
+    timeinfo.tm_mon -= 1;
+    
+    // Convert to time_t (seconds since epoch)
+    return mktime(&timeinfo);
+}
+
+// Usage example
+int main() {
+    const char* datetime = "2024-01-15T14:30:00";
+    time_t epoch_seconds = datetime_to_epoch(datetime);
+    
+    if (epoch_seconds != -1) {
+        printf("Datetime: %s\n", datetime);
+        printf("Epoch seconds: %ld\n", epoch_seconds);
+    } else {
+        printf("Failed to parse datetime string\n");
+    }
+    
+    return 0;
+}
+```
+
+## Complete example with both conversions:
+
+```c
+#include <stdio.h>
+#include <time.h>
+#include <string.h>
+
+time_t datetime_to_epoch(const char* datetime_str) {
+    struct tm timeinfo = {0};
+    
+    if (sscanf(datetime_str, "%d-%d-%dT%d:%d:%d",
+               &timeinfo.tm_year, &timeinfo.tm_mon, &timeinfo.tm_mday,
+               &timeinfo.tm_hour, &timeinfo.tm_min, &timeinfo.tm_sec) != 6) {
+        return -1;
+    }
+    
+    timeinfo.tm_year -= 1900;
+    timeinfo.tm_mon -= 1;
+    timeinfo.tm_isdst = -1; // Let mktime determine DST
+    
+    return mktime(&timeinfo);
+}
+
+void epoch_to_datetime(time_t epoch_seconds, char* buffer, size_t buffer_size) {
+    struct tm* timeinfo = localtime(&epoch_seconds);
+    strftime(buffer, buffer_size, "%Y-%m-%dT%H:%M:%S", timeinfo);
+}
+
+int main() {
+    // Test conversion
+    const char* test_datetime = "2024-01-15T14:30:00";
+    
+    // String to epoch
+    time_t epoch = datetime_to_epoch(test_datetime);
+    if (epoch == -1) {
+        printf("Conversion failed!\n");
+        return 1;
+    }
+    
+    printf("Original datetime: %s\n", test_datetime);
+    printf("Epoch seconds: %ld\n", epoch);
+    
+    // Epoch back to string
+    char datetime_buffer[20];
+    epoch_to_datetime(epoch, datetime_buffer, sizeof(datetime_buffer));
+    printf("Converted back: %s\n", datetime_buffer);
+    
+    return 0;
+}
+```
+
+## Key points:
+
+- **`mktime()`** converts `struct tm` to `time_t` (seconds since epoch)
+- **`localtime()`** converts `time_t` to `struct tm` (local time)
+- **`strftime()`** formats `struct tm` as a string
+- **`tm_year`** is years since 1900
+- **`tm_mon`** is 0-11 (January = 0)
+- **`tm_isdst = -1`** lets the system determine Daylight Saving Time
+
+This handles the ISO 8601 format `yyyy-MM-ddThh:mm:ss` that you specified.
+
