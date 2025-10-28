@@ -4,6 +4,10 @@
 #include <math.h>
 #include <string.h>
 #include "lfile1.h"
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
+#define WITHMS 1
 int debug=0;
 #if defined(_MSC_VER) && _MSC_VER < 1900
 double round(double number)
@@ -75,8 +79,8 @@ void leftpad(char *s,char c){
 
 // yyyy-MM-ddThh:mm:ss
 void getUTC(char *bcstrt, double ts){
-	int year,mon,day,hour,min,sec;
-    char smon[3],sday[3],shour[3],smin[3],ssec[3];
+	int year,mon,day,hour,min,sec,msec,usec;
+    char smon[3],sday[3],shour[3],smin[3],ssec[3],smsec[4];
 	char *dt;
 	double mytime=ts;
 	// Structure to store local time
@@ -84,18 +88,24 @@ void getUTC(char *bcstrt, double ts){
     // Variable to store current time
     time_t t;
 	time_t mytimet=(time_t)mytime; /* input time seconds */
-        double bcoffset = TIMEOFFS;
+    double bcoffset = TIMEOFFS;
 	double bctime=mytime+bcoffset;
 	time_t bctimet=(time_t)bctime;
-	time_t bt;
-	double mytimeud; /* input time microseconds */
+	printf("lfile1::getUTC() bctime: %lf \n",bctime);
+	printf("lfile1::getUTC() bctimet: %ld \n",bctimet);
+	usec = (bctime - bctimet)*1000000.0;
+	printf("lfile1::getUTC() usec: %d \n",usec);
+	msec = usec/1000.0;
+	printf("lfile1::getUTC() msec: %d \n",msec);
+/*	time_t bt;
+	double mytimeud; // input time microseconds 
 	unsigned int mytimeu;
 	mytimeud = (mytime-(double)mytimet)*1000000.0;
 	mytimeu = (unsigned int)round(mytimeud);
 	if (debug) printf("read input time: %f\n",mytime);
 	if (debug) printf("input time seconds: %ld\n",mytimet);
 	if (debug) printf("input time microseconds (double): %f\n",mytimeud);
-	if (debug) printf("input time microseconds (uint): %u\n",mytimeu);
+	if (debug) printf("input time microseconds (uint): %u\n",mytimeu);*/
     ptr = gmtime(&bctimet); 
     if (debug) printf("UTC: %s\n", asctime(ptr));    
   year=ptr->tm_year+1900;
@@ -105,16 +115,23 @@ void getUTC(char *bcstrt, double ts){
   snprintf(shour,3,"%2d",ptr->tm_hour);
   snprintf(smin,3,"%2d",ptr->tm_min);
   snprintf(ssec,3,"%2d",ptr->tm_sec);
+  snprintf(smsec,4,"%3d",msec);
  
   leftpad(smon,'0'); 
   leftpad(sday,'0');
   leftpad(shour,'0');
   leftpad(smin,'0');
   leftpad(ssec,'0');
-  
-  snprintf(bcstrt,32,"%d-%2s-%2s:%2s:%2s:%2s",year,smon,\
+  leftpad(smsec,'0');
+#if defined(WITHMS) && WITHMS
+  snprintf(bcstrt,32,"%d-%2s-%2sT%2s:%2s:%2s.%3s",year,smon,\
+  sday,shour,smin,ssec,smsec);
+#else
+  snprintf(bcstrt,32,"%d-%2s-%2sT%2s:%2s:%2s",year,smon,\
   sday,shour,smin,ssec);
-  if (debug) printf("getBC_UTC():BC Tm str: %s\n",bcstrt);
+#endif
+ 
+  if (debug) printf("getUTC():BC Tm str: %s\n",bcstrt);
 	return;
 }
 /* return unix time seconds given UTC datetime string*/
@@ -175,24 +192,52 @@ int getSecs(double *ts, char *bcstrt){
    }
   } */
   t = mktime(&tmp);
-  tmp.tm_yday+=day;
-  tmp.tm_yday--;
-  printf("tmp.hour: %d\n",tmp.tm_hour);
-  printf("tmp.yday: %d\n",tmp.tm_yday);
+  printf("lfile1::getSecs() t: %ld\n",t);
+  tmp.tm_yday;
+  printf("lfile1::getSecs() tmp.hour: %d\n",tmp.tm_hour);
+  printf("lfile1::getSecs() tmp.yday: %d\n",tmp.tm_yday);
+  /*
   *ts = (tmp.tm_year-70)*86400*365.25+tmp.tm_yday
-  *86400+tmp.tm_hour*3600+tmp.tm_min*60+tmp.tm_sec;
-  printf("ts: %lf\n",*ts);
+  *86400+tmp.tm_hour*3600+tmp.tm_min*60+tmp.tm_sec; */
+  *ts=(double)t;
+  printf("lfile1::getSecs() ts: %lf\n",*ts);
   return 0;
 }
 int print_log(char *msg, struct LOG *log, FILE *lfp){
-	time_t s; /* seconds since 1970-01-01T00:00:00 */
-	int year,mon,day,hour,min,sec;
-        char smon[3],sday[3],shour[3],smin[3],ssec[3];
+	time_t t; /* seconds since 1970-01-01T00:00:00 */
+	double s;
+	int year,mon,day,hour,min,sec,msec;
+    char smon[3],sday[3],shour[3],smin[3],ssec[3],smsec[4];
 	char *dt; char msgbuf[2048]; int res;
+    unsigned long nano;
+#ifndef _MSC_VER
+    struct timespec tres;
+#else
+    SYSTEMTIME st, lt;
+#endif
 	strcpy(log->msg,msg);
 	    // Get current time
-        s = time(NULL);
+    t = time(NULL);
+	printf("print_log() t: %ld\n",t);
+#ifndef _MSC_VER
+    clock_gettime(CLOCK_REALTIME,&tres);
+    nano = tres.tv_nsec;
+#else
+    GetSystemTime(&st);
+    GetLocalTime(&lt);
+    if (debug) printf("print_log() (MSVC) The system time is: %02d:%02d\n", st.wHour, st.wMinute);
+    if (debug) printf("print_log() (MSVC) The local time is: %02d:%02d\n", lt.wHour, lt.wMinute);
+    if (debug) printf("print_log() (MSVC) The system time ms are: %03d\n", st.wMilliseconds);
+    if (debug) printf("print_log() (MSVC) The local time ms are: %03d\n", lt.wMilliseconds);
+    nano = lt.wMilliseconds*1000000;
+#endif
+	printf("print_log() nano: %lu\n",nano);
+    s = (double)t+nano*0.000000001;
+	printf("print_log() s: %lf\n",s);
+
+    /* read consecutive nanosecond values */
 	getUTC(log->utc,s);
+
 	if (debug) printf("print_log() utc: %s\n",log->utc);
 	if (debug) printf("print_log() host: %s\n",log->host);
 	if (debug) printf("print_log() caller: %s\n",log->caller);
@@ -209,6 +254,30 @@ int destroy_db(struct TM *tm){
   fprintf(stderr,"destroy_db() going to free memory of the structure array\n");
 /*  free(tm); */
   return 0;
+}
+time_t datetime_to_epoch(const char* datetime_str){
+    int res;
+    struct tm timeinfo = {0};
+// Parse the datetime string (yyyy-MM-ddThh:mm:ss f>
+    res = sscanf(datetime_str, "%4d-%2d-%2dT%2d:%2d:%2d",
+               &timeinfo.tm_year, &timeinfo.tm_mon, &timeinfo.tm_mday,
+               &timeinfo.tm_hour, &timeinfo.tm_min, &timeinfo.tm_sec);
+    printf("datetime_to_epoch() res from scanf() : %d\n",res);
+
+    // Adjust struct tm values (tm_year is years since >
+    timeinfo.tm_year -= 1900;
+    timeinfo.tm_mon -= 1;
+
+    // Convert to time_t (seconds since epoch)
+    return mktime(&timeinfo);
+}
+void epoch_to_datetime(time_t epoch_seconds, char* buffer, size_t buffer_size){
+    struct tm* timeinfo;
+    // Convert epoch seconds to struct t
+   timeinfo = localtime(&epoch_seconds);
+
+    // Format as yyyy-MM-ddThh:mm:ss
+    strftime(buffer, buffer_size, "%Y-%m-%dT%H:%M:%S", timeinfo);
 }
 
 /*

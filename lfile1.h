@@ -7,9 +7,10 @@
 #endif
 #include <stdio.h>
 #include <stddef.h>
+#include <time.h>
 static size_t ic;
 struct LOG{
-	char utc[24];
+	char utc[32];
 	char host[24];
 	char caller[24];
 	char level[8];
@@ -43,5 +44,7 @@ int get_log_host();
 int get_log_caller();
 int print_log(char *msg, struct LOG *log, FILE *lfp);
 int destroy_db(struct TM *tm);
+time_t datetime_to_epoch(const char* datetime_str);
+void epoch_to_datetime(time_t epoch_seconds, char* buffer, size_t buffer_size);
 
 #endif /* LFILE1_H */
