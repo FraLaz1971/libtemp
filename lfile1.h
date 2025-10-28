@@ -17,6 +17,7 @@ struct LOG{
 	char msg[1024];
     char FS;
     char RS[2];
+    FILE *lfp;
 };
 
 struct TM{

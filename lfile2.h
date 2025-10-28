@@ -36,17 +36,17 @@ struct array2D{
 	struct LOG *logger;
 };
 
-int init_curve_2D(struct curve2D *curve);
+int init_curve_2D(struct curve2D *curve, struct LOG *logger, FILE *lfp);
 
-int plot_curve_2D(struct curve2D *curve, int ptype);
+int plot_curve_2D(struct curve2D *curve, int ptype, struct LOG *logger, FILE *lfp);
 
-int read_curve_2D(const char *ifname, struct curve2D *curve, int ftype);
+int read_curve_2D(const char *ifname, struct curve2D *curve, int ftype, struct LOG * logger, FILE *lfp);
 
-int save_curve_2D(const char *ofname, struct curve2D *curve, int ftype);
+int save_curve_2D(const char *ofname, struct curve2D *curve, int ftype, struct LOG *logger, FILE *lfp);
 
 int set_curve2D_log(struct curve2D *curve, struct LOG *log);
 
-int destroy_curve_2D(struct curve2D *curve);
+int destroy_curve_2D(struct curve2D *curve, struct LOG *logger, FILE * lfp);
 
 int init_array_2D(struct array2D *matrix);
 
