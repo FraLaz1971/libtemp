@@ -5,7 +5,7 @@
 #define MAXHEIGHT 1000 
 #include "lfile1.h"
 
-enum file_type{ASCII,BINARY};
+enum file_format{ASCII,BINARY,FLOAT_BINARY,DOUBLE_BINARY,ASCIIERR,GPTABLE,FITS,PDS4,NETCDF,PS,PNG,GIF};
 
 enum plot_type{PLOTUTILS,GNUPLOT};
 
@@ -13,20 +13,23 @@ enum plot_type{PLOTUTILS,GNUPLOT};
 struct PLOTTER{
 	int engine; /* plot_type (e.g. gnuplot or plotutils graph, ...)*/
 	char *driver; /* plot driver */
-	char *pcmd; /* plot command */
-	char *ifile; /* data input file name (e.g. "data.asc")*/
+	char pcmd[256]; /* plot command */
+	char ifile[256]; /* data input file name (e.g. "data.asc" or "data.bin")*/
 	char *bfile; /* batch commands file name (e.g. "myplot.gp" or myplot.bat or myplot.sh)*/
-	char *ofile; /* plot output file name (e.g. "myplot.png")*/
+	char ofile[256]; /* plot output file name (e.g. "myplot.png")*/
 	char *xlabel; /* name of the x-axis */
 	char *ylabel; /* name of the y-axis */
 	char *title; /* title of the plot */
-	int xmin;
-	int xmax;
-	int ymin;
-	int ymax;
+	int xmin; /* minimum of the x range */
+	int xmax; /* maximum of the x range*/
+	int ymin; /* minimum of the ypsilon range */
+	int ymax; /* maximum of the ypsilon range */
 	int ftype; /* type of the input file (ascii or binary)*/
 	struct curve2D *curve; /* pointer to the curve to plot */
 	struct array2D *image; /* pointer to the image to plot */
+	int iftype; /* input file format */
+	int oftype; /* output file format */
+	unsigned char data_present;
 };
 
 struct curve2D{
@@ -35,7 +38,10 @@ struct curve2D{
 	unsigned long size;
 	FILE *ifp; /* pointer to the input file */
 	FILE *ofp; /* pointer to the output file */
+	int iftype; /* input file format */
+	int oftype; /* output file format */
 	struct LOG *logger;
+	struct PLOTTER *plotter;
 };
 
 struct array2D{
@@ -55,19 +61,21 @@ int read_curve_2D(const char *ifname, struct curve2D *curve, int ftype, struct L
 
 int save_curve_2D(const char *ofname, struct curve2D *curve, int ftype, struct LOG *logger, FILE *lfp);
 
-int set_curve2D_log(struct curve2D *curve, struct LOG *log);
+int save2_curve_2D(const char *ofname, struct curve2D *curve, int ftype, struct LOG *logger, FILE *lfp);
+
+int set_curve2D_log(struct curve2D *curve, struct LOG *log, FILE * lfp);
 
 int destroy_curve_2D(struct curve2D *curve, struct LOG *logger, FILE * lfp);
 
-int init_array_2D(struct array2D *matrix);
+int init_array_2D(struct array2D *matrix, struct LOG *logger, FILE * lfp);
 
-int plot_array_2D(struct array2D *matrix, int ptype);
+int plot_array_2D(struct array2D *matrix, int ptype, struct LOG *logger, FILE * lfp);
 
-int read_array_2D(const char *ifname, struct array2D *matrix, int ftype);
+int read_array_2D(const char *ifname, struct array2D *matrix, int ftype, struct LOG *logger, FILE * lfp);
 
-int save_array_2D(const char *ifname, struct array2D *matrix, int ftype);
+int save_array_2D(const char *ifname, struct array2D *matrix, int ftype, struct LOG *logger, FILE * lfp);
 
-int set_array2D_log(struct array2D *matrix, struct LOG *log);
+int set_array2D_log(struct array2D *matrix, struct LOG *log, FILE * lfp);
 
-int destroy_array_2D(struct array2D *matrix);
+int destroy_array_2D(struct array2D *matrix, struct LOG *logger, FILE * lfp);
 #endif /* LFILE2_H */

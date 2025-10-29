@@ -11,9 +11,13 @@ mfile1.obj: mfile1.c
 	$(CC) /c $**
 mfile2.obj: mfile2.c
 	$(CC) /c $**
+mfile3.obj: mfile3.c
+	$(CC) /c $**
 mfile1.exe: mfile1.obj lfile1.obj
 	$(LD) /out:$@ $**
-mfile2.exe: mfile2.obj lfile1.obj
+mfile2.exe: mfile2.obj lfile1.obj lfile2.obj
+	$(LD) /out:$@ $**
+mfile3.exe: mfile3.obj lfile1.obj lfile2.obj
 	$(LD) /out:$@ $**
 clean:
 	$(RM) *.obj mfile1.exe mfile2.exe

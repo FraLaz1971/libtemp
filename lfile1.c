@@ -91,21 +91,12 @@ void getUTC(char *bcstrt, double ts){
     double bcoffset = TIMEOFFS;
 	double bctime=mytime+bcoffset;
 	time_t bctimet=(time_t)bctime;
-	printf("lfile1::getUTC() bctime: %lf \n",bctime);
-	printf("lfile1::getUTC() bctimet: %ld \n",bctimet);
+	if (debug) printf("lfile1::getUTC() bctime: %lf \n",bctime);
+	if (debug) printf("lfile1::getUTC() bctimet: %ld \n",bctimet);
 	usec = (bctime - bctimet)*1000000.0;
-	printf("lfile1::getUTC() usec: %d \n",usec);
+	if (debug) printf("lfile1::getUTC() usec: %d \n",usec);
 	msec = usec/1000.0;
-	printf("lfile1::getUTC() msec: %d \n",msec);
-/*	time_t bt;
-	double mytimeud; // input time microseconds 
-	unsigned int mytimeu;
-	mytimeud = (mytime-(double)mytimet)*1000000.0;
-	mytimeu = (unsigned int)round(mytimeud);
-	if (debug) printf("read input time: %f\n",mytime);
-	if (debug) printf("input time seconds: %ld\n",mytimet);
-	if (debug) printf("input time microseconds (double): %f\n",mytimeud);
-	if (debug) printf("input time microseconds (uint): %u\n",mytimeu);*/
+	if (debug) printf("lfile1::getUTC() msec: %d \n",msec);
     ptr = gmtime(&bctimet); 
     if (debug) printf("UTC: %s\n", asctime(ptr));    
   year=ptr->tm_year+1900;
@@ -148,59 +139,16 @@ int getSecs(double *ts, char *bcstrt){
   tmp.tm_hour=hour;
   tmp.tm_min=min;
   tmp.tm_sec=sec;
-/*  tmp.tm_yday=0;
-  for(i=0;i<tmp.tm_mon;i++){
-   switch (i) {
-     case 0:
-     tmp.tm_yday+=31;
-     break;
-     case 1:
-     tmp.tm_yday+=28;
-     break;
-     case 2:
-     tmp.tm_yday+=31;
-     break;
-     case 3:
-     tmp.tm_yday+=30;
-     break;
-     case 4:
-     tmp.tm_yday+=31;
-     break;
-     case 5:
-     tmp.tm_yday+=30;
-     break;
-     case 6:
-     tmp.tm_yday+=31;
-     break;
-     case 7:
-     tmp.tm_yday+=31;
-     break;
-     case 8:
-     tmp.tm_yday+=30;
-     break;
-     case 9:
-     tmp.tm_yday+=31;
-     break;
-     case 10:
-     tmp.tm_yday+=30;
-     break;
-     case 11:
-     tmp.tm_yday+=31;
-     break;
-     default:
-     puts("illegal month number");
-   }
-  } */
   t = mktime(&tmp);
-  printf("lfile1::getSecs() t: %ld\n",t);
+  if (debug) printf("lfile1::getSecs() t: %ld\n",t);
   tmp.tm_yday;
-  printf("lfile1::getSecs() tmp.hour: %d\n",tmp.tm_hour);
-  printf("lfile1::getSecs() tmp.yday: %d\n",tmp.tm_yday);
+  if (debug) printf("lfile1::getSecs() tmp.hour: %d\n",tmp.tm_hour);
+  if (debug) printf("lfile1::getSecs() tmp.yday: %d\n",tmp.tm_yday);
   /*
   *ts = (tmp.tm_year-70)*86400*365.25+tmp.tm_yday
   *86400+tmp.tm_hour*3600+tmp.tm_min*60+tmp.tm_sec; */
   *ts=(double)t;
-  printf("lfile1::getSecs() ts: %lf\n",*ts);
+  if (debug) printf("lfile1::getSecs() ts: %lf\n",*ts);
   return 0;
 }
 int print_log(char *msg, struct LOG *log, FILE *lfp){
@@ -218,7 +166,7 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
 	strcpy(log->msg,msg);
 	    // Get current time
     t = time(NULL);
-	printf("print_log() t: %ld\n",t);
+	if (debug) printf("print_log() t: %ld\n",t);
 #ifndef _MSC_VER
     clock_gettime(CLOCK_REALTIME,&tres);
     nano = tres.tv_nsec;
@@ -231,9 +179,9 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
     if (debug) printf("print_log() (MSVC) The local time ms are: %03d\n", lt.wMilliseconds);
     nano = lt.wMilliseconds*1000000;
 #endif
-	printf("print_log() nano: %lu\n",nano);
+	if (debug) printf("print_log() nano: %lu\n",nano);
     s = (double)t+nano*0.000000001;
-	printf("print_log() s: %lf\n",s);
+	if (debug) printf("print_log() s: %lf\n",s);
 
     /* read consecutive nanosecond values */
 	getUTC(log->utc,s);
@@ -248,7 +196,8 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
 	res = sprintf(msgbuf,"%s%c%s%c%s%c%s%c%s%s",(char *)log->utc,log->FS,(char *)log->host, log->FS,
 	(char *)log->caller,log->FS,(char *)log->level,log->FS,(char *)log->msg,(char *)log->RS);
 	fprintf(lfp,"%s",msgbuf);
-	perror(msgbuf);
+	perror(msgbuf); 
+	fflush(lfp);
   return res;
 }
 int destroy_db(struct TM *tm){

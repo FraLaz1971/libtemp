@@ -3,6 +3,9 @@
 #define DBSIZE 2
 #define TIMEOFFS 0
 #if defined(_MSC_VER) && _MSC_VER < 1900
+#define __func__ __FUNCTION__
+#endif
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 #include <stdio.h>
@@ -16,7 +19,7 @@ struct LOG{
 	char level[8];
 	char msg[1024];
     char FS;
-    char RS[2];
+    char RS[3];
     FILE *lfp;
 };
 
