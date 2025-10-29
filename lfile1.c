@@ -248,6 +248,7 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
 	res = sprintf(msgbuf,"%s%c%s%c%s%c%s%c%s%s",(char *)log->utc,log->FS,(char *)log->host, log->FS,
 	(char *)log->caller,log->FS,(char *)log->level,log->FS,(char *)log->msg,(char *)log->RS);
 	fprintf(lfp,"%s",msgbuf);
+	perror(msgbuf);
   return res;
 }
 int destroy_db(struct TM *tm){

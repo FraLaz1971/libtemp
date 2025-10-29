@@ -11,11 +11,22 @@ enum plot_type{PLOTUTILS,GNUPLOT};
 
 /* plotutils settings */
 struct PLOTTER{
-	int *engine; /* plot type */
+	int engine; /* plot_type (e.g. gnuplot or plotutils graph, ...)*/
 	char *driver; /* plot driver */
+	char *pcmd; /* plot command */
 	char *ifile; /* data input file name (e.g. "data.asc")*/
+	char *bfile; /* batch commands file name (e.g. "myplot.gp" or myplot.bat or myplot.sh)*/
 	char *ofile; /* plot output file name (e.g. "myplot.png")*/
+	char *xlabel; /* name of the x-axis */
+	char *ylabel; /* name of the y-axis */
+	char *title; /* title of the plot */
+	int xmin;
+	int xmax;
+	int ymin;
+	int ymax;
 	int ftype; /* type of the input file (ascii or binary)*/
+	struct curve2D *curve; /* pointer to the curve to plot */
+	struct array2D *image; /* pointer to the image to plot */
 };
 
 struct curve2D{

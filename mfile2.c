@@ -7,7 +7,7 @@ int main(int argc, char **argv){
 	struct LOG log2; char buf[64], mes[1024];
 	struct curve2D curve;
 	FILE *lfp2; int res;
-        char *ofname="curve001.bin";
+    char *ofname="curve001.bin";
 	if(argc<2){
 		fprintf(stderr,"usage:%s <filename>\n",argv[0]);
 		return 1;
@@ -33,8 +33,8 @@ int main(int argc, char **argv){
 	curve.y=(int *)malloc(MAXSIZE*sizeof(int));
 	res = read_curve_2D("parabola001.asc",&curve,ASCII,&log2,lfp2);
 	/* computing stops here */
-        res=plot_curve_2D(&curve,PLOTUTILS,&log2,lfp2);
-        res=save_curve_2D(ofname, &curve, BINARY, &log2,lfp2);
+    res=plot_curve_2D(&curve,GNUPLOT,&log2,lfp2);
+    res=save_curve_2D(ofname, &curve, BINARY, &log2,lfp2);
 	strcpy(log2.caller,"mfile2::main()");
 	print_log("going to free the resources",&log2,lfp2);
         res=destroy_curve_2D(&curve,&log2,lfp2);
