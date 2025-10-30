@@ -141,7 +141,6 @@ int getSecs(double *ts, char *bcstrt){
   tmp.tm_sec=sec;
   t = mktime(&tmp);
   if (debug) printf("lfile1::getSecs() t: %ld\n",t);
-  tmp.tm_yday;
   if (debug) printf("lfile1::getSecs() tmp.hour: %d\n",tmp.tm_hour);
   if (debug) printf("lfile1::getSecs() tmp.yday: %d\n",tmp.tm_yday);
   /*
