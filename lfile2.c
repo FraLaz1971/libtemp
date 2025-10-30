@@ -213,20 +213,6 @@ int save_curve_2D(const char *ofname, struct curve2D *curve, int ftype, struct L
 		}
 	return 0;
 }
-int save2_curve_2D(const char *ofname, struct curve2D *curve, int ftype, struct LOG *logger, FILE *lfp){
-		char lmsg[256]; FILE *ofp; int i;
-		strcpy(logger->caller,__func__);
-		print_log("starting saving",logger,lfp);
-        ofp=fopen(ofname, "wb");
-		/* write data rows */
-        for(i=0;i<curve->size;i++){
-			fwrite(&curve->x[i],4,1,ofp);fwrite(&curve->y[i],4,1,ofp);
-		}        
-        /* close ascii output file */
-        fclose(ofp);
-		print_log("binary file saving completed",logger,lfp);
-	return 0;
-}
 int set_curve2D_log(struct curve2D *curve, struct LOG *log, FILE * lfp){
         curve->logger = log;
 	return 0;
@@ -250,14 +236,91 @@ int plot_array_2D(struct array2D *matrix, int ptype, struct LOG *logger, FILE * 
 }
 
 int read_array_2D(const char *ifname, struct array2D *matrix, int ftype, struct LOG *logger, FILE * lfp){ 
-		strcpy(logger->caller,__func__);
-		print_log("starting reading array 2D",logger,lfp);
+	FILE *ifp; int i,j; char line[MAXCHARS]; char *sep=" ";/* field separator */
+	char *val; char msg[1024];
+    strcpy(logger->caller,__func__);
+    print_log("opening image file for reading",logger,lfp);
+	if(ftype==ASCII){
+        print_log("data format is ASCII",logger,lfp);
+		ifp = fopen(ifname, "r");
+		if (ifp == NULL) {
+	        fprintf(stderr,"ERROR: no such file %s", ifname);
+	        return 0;
+		}
+		i=0;
+		while (fgets(line,MAXCHARS,ifp)){ /* loop*/
+			val = strtok(line," ");
+			j=0;
+			while(val){
+				matrix->arr[i][j]=atoi(val);
+				if (debug) fprintf(stderr,"read_array_2D() arr[%d][%d]:%d ",i,j,matrix->arr[i][j]);
+				val = strtok(NULL, " ");
+				j++;
+			}
+			i++;
+		}
+        print_log("ended reading image data",logger,lfp);
+		matrix->height = i; matrix->width = j-1;
+		snprintf(msg,512,"image width: %lu height: %lu \n", matrix->width,matrix->height);
+		fclose(ifp);
+        print_log("image input file closed ",logger,lfp);
+	} /* process ASCII input case */
 	return 0;
 }
 
-int save_array_2D(const char *ifname, struct array2D *matrix, int ftype, struct LOG *logger, FILE * lfp){ 
+int save_array_2D(const char *ofname, struct array2D *matrix, int ftype, struct LOG *logger, FILE * lfp){ 
+		char lmsg[256]; FILE *ofp; int i,j;
 		strcpy(logger->caller,__func__);
-		print_log("starting saving array 2D",logger,lfp);
+		print_log("starting saving image 2D",logger,lfp);
+        strcpy(logger->caller,__func__);
+        snprintf(lmsg,255, "saving image on file %s", ofname);
+        print_log(lmsg,logger,lfp);
+        if(ftype==BINARY){
+        ofp=fopen(ofname, "wb");
+		snprintf(lmsg,255,"opened file %s for writing",ofname);
+		print_log(lmsg,logger,lfp);
+        if(ofp==NULL) {
+			strcpy(logger->level,"ERR");
+			print_log("error in opening binary data file for writing",logger,lfp);
+			strcpy(logger->level,"INFO");
+		}
+		
+		/* write image data  */
+
+		snprintf(lmsg,255,"image width: %lu height: %lu",matrix->width,matrix->height);
+		print_log(lmsg,logger,lfp);
+        for(i=0;i<matrix->height;i++){
+			for(j=0;j<matrix->width; j++){
+				fwrite(&matrix->arr[i][j],4,1,ofp);;
+				if (debug) fprintf(stderr,"%d ",matrix->arr[i][j]);
+			}
+		}
+        /* close ascii output file */
+        fclose(ofp);
+		} else if (ftype==ASCII){
+			/* open ascii file for writing */
+        /* write data file */
+        ofp=fopen(ofname, "w");
+        if(ofp==NULL) {
+			strcpy(logger->level,"ERR");
+			print_log("error in opening ascii data file for writing",logger,lfp);
+			strcpy(logger->level,"INFO");
+		}
+		/* write data rows */
+        for(i=0;i<matrix->height;i++){
+			for(i=0;j<matrix->width; j++);{
+				fprintf(ofp,"%d ", matrix->arr[i][j]);
+			}
+			puts("");
+		}        
+        /* close ascii output file */
+        fclose(ofp);
+		} else {
+			strcpy(logger->level,"WARN");
+			print_log("unhandled file type",logger,lfp);			
+			strcpy(logger->level,"INFO");
+		}
+
 	return 0;
 }
 int set_array2D_log(struct array2D *matrix, struct LOG *log, FILE * lfp){

@@ -7,7 +7,7 @@ RM=rm -rf
 
 .PHONY: all clean
 
-all: mfile1 mfile2 mfile3
+all: mfile1 mfile2 mfile3 mfile4
 
 lfile1.o: lfile1.c
 	$(CC) -c $<
@@ -17,11 +17,15 @@ mfile2.o: mfile2.c
 	$(CC) -c $<
 mfile3.o: mfile3.c
 	$(CC) -c $<
+mfile4.o: mfile4.c
+	$(CC) -c $<
 mfile1: mfile1.o lfile1.o
 	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
 mfile2: mfile2.o lfile1.o lfile2.o
 	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
 mfile3: mfile3.o lfile1.o lfile2.o
 	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile4: mfile4.o lfile1.o lfile2.o
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
 clean:
-	$(RM) *.o mfile1 mfile2 mfile3
+	$(RM) *.o mfile1 mfile2 mfile3 mfile4

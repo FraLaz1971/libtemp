@@ -35,7 +35,7 @@ int main(int argc, char **argv){
 	curve.x=(int *)malloc(MAXSIZE*sizeof(int));
 	curve.y=(int *)malloc(MAXSIZE*sizeof(int));
 	res = read_curve_2D("parabola001.asc",&curve,ASCII,&log2,lfp2);
-    res = save2_curve_2D(ofname, &curve, BINARY, &log2,lfp2);
+    res = save_curve_2D(ofname, &curve, BINARY, &log2,lfp2);
     strcpy(curve.plotter->ifile,"mycurve.dat");
     curve.oftype=PNG;
     curve.plotter->data_present=0;

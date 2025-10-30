@@ -38,17 +38,17 @@ double round(double number)
   return 0;
 }
 int populate_db(struct TM *tm, FILE *ifp){
-    int i;
+    int i, res;
     fprintf(stderr,"populate_db() going to read in memory data from the ascii file\n");
     for(i=0;i<DBSIZE;i++){
     tm[i].ID=ic++;
-    fscanf(ifp,"%hu\n",&tm[i].APID);
-    fscanf(ifp,"%hhu\n",&tm[i].PID);
-    fscanf(ifp,"%hhu\n",&tm[i].CAT);
-    fscanf(ifp,"%63s\n",tm[i].fname);
-    fscanf(ifp,"%lu\n",&tm[i].size);
-    fscanf(ifp,"%63s\n",tm[i].tstart);
-    fscanf(ifp,"%63s\n",tm[i].tstop);
+    res = fscanf(ifp,"%hu\n",&tm[i].APID);
+    res = fscanf(ifp,"%hhu\n",&tm[i].PID);
+    res = fscanf(ifp,"%hhu\n",&tm[i].CAT);
+    res = fscanf(ifp,"%63s\n",tm[i].fname);
+    res = fscanf(ifp,"%lu\n",&tm[i].size);
+    res = fscanf(ifp,"%63s\n",tm[i].tstart);
+    res = fscanf(ifp,"%63s\n",tm[i].tstop);
   }
   return 0;
 }
