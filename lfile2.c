@@ -88,12 +88,16 @@ int plot_curve_2D(struct curve2D *curve, int ptype, struct LOG *logger, FILE *lf
 			strcpy(myplot.pcmd,"sh ");
         /* write plotter batch script */
         myplot.bfile=(char *)malloc(16);
+	if(__unix__)
 		strcpy(myplot.bfile,"myplot.sh");
-		myplot.xlabel=(char *)malloc(16); strcpy(myplot.xlabel,"x-axis");
-		myplot.ylabel=(char *)malloc(16); strcpy(myplot.ylabel,"y-axis");
-		myplot.title=(char *)malloc(32); strcpy(myplot.title, "Interesting Curve");
+	else
+		strcpy(myplot.bfile,"myplot.bat");
+	myplot.xlabel=(char *)malloc(16); strcpy(myplot.xlabel,"x-axis");
+	myplot.ylabel=(char *)malloc(16); strcpy(myplot.ylabel,"y-axis");
+	myplot.title=(char *)malloc(32); strcpy(myplot.title, "Interesting Curve");
         bf=fopen(myplot.bfile, "w");
-        fprintf(bf,"#!/bin/bash\n");
+	if(__unix__)
+	        fprintf(bf,"#!/bin/bash\n");
         fprintf(bf,"graph -T '%s' \\\n",myplot.driver);
         fprintf(bf, "-I i \\\n");
         fprintf(bf, "-m 3 -C \\\n");
