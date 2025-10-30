@@ -23,9 +23,7 @@ int main(int argc, char **argv){
 		fprintf(stderr,"ERROR: cannot open log file pipeline.log for writing\n");
 		return 1;
 	}
-	fprintf(lfp2,"test text\n");
-	fflush(lfp2);
-        //curve.logger->lfp = lfp2;
+    //curve.logger->lfp = lfp2;
 	print_log("executing",&log2,lfp2);
 	snprintf(buf,63,"input file is %s",argv[1]);
 	print_log(buf,&log2,lfp2);
@@ -34,7 +32,7 @@ int main(int argc, char **argv){
 	res = init_curve_2D(&curve,&log2,lfp2);
 	curve.x=(int *)malloc(MAXSIZE*sizeof(int));
 	curve.y=(int *)malloc(MAXSIZE*sizeof(int));
-	res = read_curve_2D("parabola001.asc",&curve,ASCII,&log2,lfp2);
+	res = read_curve_2D(argv[1],&curve,ASCII,&log2,lfp2);
     res = save_curve_2D(ofname, &curve, BINARY, &log2,lfp2);
     strcpy(curve.plotter->ifile,"mycurve.dat");
     curve.oftype=PNG;

@@ -120,14 +120,14 @@ int plot_curve_2D(struct curve2D *curve, int ptype, struct LOG *logger, FILE *lf
         fprintf(bf,"'%s'\n",myplot.ofile);
 #else
 #if defined (_WIN32) || defined (_WIN64)
-        fprintf(bf,"graph -T '%s' ^\n",myplot.driver);
+        fprintf(bf,"graph -T %s ^\n",myplot.driver);
         fprintf(bf, "-I i ^\n");
         fprintf(bf, "-m 3 -C ^\n");
-        fprintf(bf,"-X '%s' ^\n",myplot.xlabel);
-        fprintf(bf,"-Y '%s' ^\n",myplot.ylabel);
-        fprintf(bf,"-L '%s' ^\n",myplot.title);
-        fprintf(bf, "'%s' > ^\n",myplot.ifile);
-        fprintf(bf,"%s\n", myplot.ofile);
+        fprintf(bf,"-X \"%s\" ^\n",myplot.xlabel);
+        fprintf(bf,"-Y \"%s\" ^\n",myplot.ylabel);
+        fprintf(bf,"-L \"%s\" ^\n",myplot.title);
+        fprintf(bf,"-o \"%s\" ^\n", myplot.ofile);
+        fprintf(bf, "\"%s\"\n",myplot.ifile);
 #endif
 #endif
         fclose(bf);
