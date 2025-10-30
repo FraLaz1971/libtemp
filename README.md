@@ -17,4 +17,5 @@ To run on windows
 `mfile1 tmdb.txt`
 ###
 check the file pipeline.log
-
+The library gives the possibility to read, write and plot 2D arrays and images in different formats,
+included plain ascii (e. g. csv or ssv) raw binary, fits, pds4, png.

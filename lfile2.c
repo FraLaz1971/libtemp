@@ -230,8 +230,121 @@ int init_array_2D(struct array2D *matrix, struct LOG *logger, FILE * lfp){
 }
 
 int plot_array_2D(struct array2D *matrix, int ptype, struct LOG *logger, FILE * lfp){ 
+		int res=0;
+		unsigned long int i,j;
+		/* data file pointer */
+		FILE *df;
+		/* batch file pointer */
+		FILE *bf;
+		/* total plot command string */
+		char tpcmd[256], tlm[1024], lmsg[256];
+		/* plotter structure */
+		struct PLOTTER myplot;
 		strcpy(logger->caller,__func__);
-		print_log("starting plot array 2D",logger,lfp);
+		print_log("starting plot array 2D (image)",logger,lfp);
+		myplot.iftype = matrix->plotter->iftype;
+		myplot.oftype = matrix->plotter->oftype;
+		myplot.data_present = matrix->plotter->data_present;
+		snprintf(lmsg,255,"iftype:%d oftype:%d data_present:%d",myplot.iftype,myplot.oftype,myplot.data_present);
+		print_log(lmsg,logger,lfp);
+		strcpy(myplot.ifile,matrix->plotter->ifile);
+		/* data file name */
+        strcpy(logger->caller,__func__);
+        print_log("start plotting image",logger,lfp);
+		strcpy(myplot.ifile,matrix->plotter->ifile);
+		if(myplot.data_present) {
+			snprintf(lmsg,255,"the data to plot is yet present, file: %s\n",myplot.ifile);
+			print_log(lmsg,logger,lfp);
+		} else{
+			strcpy(myplot.ifile,"image.asc");
+			print_log("set plot input file name curve001.bin",logger,lfp);
+		}
+        /* set output driver */
+        if (myplot.oftype==PNG) {
+			myplot.driver="png";
+			/* set output plot file name */
+			strcpy(myplot.ofile,"myimage.png");
+			print_log("plot output file set to mycurve.png",logger,lfp);
+		} else if (myplot.oftype==PS) {
+			myplot.driver="eps";
+			/* set output plot file name */
+			strcpy(myplot.ofile,"myimage.eps");
+			print_log("plot output file set to mycurve.ps",logger,lfp);
+		} else if (myplot.oftype==GIF) {
+			myplot.driver="gif";
+			/* set output plot file name */
+			strcpy(myplot.ofile,"myimage.gif");
+			print_log("plot output file set to mycurve.gif",logger,lfp);
+		} else {
+			strcpy(logger->level,"WARN");
+			snprintf(lmsg,255,"unknown output file format: %d",matrix->oftype);
+			print_log(lmsg,logger,lfp);
+			strcpy(logger->level,"INFO");
+			/* default is png*/
+			myplot.driver="png";
+			/* set output plot file name */
+			strcpy(myplot.ofile,"myimage.png");
+		}
+        /* switch between plot type */
+        if (ptype==GNUPLOT){
+			myplot.engine=GNUPLOT;
+			strcpy(myplot.pcmd,"gnuplot ");
+			print_log("selected gnuplot plotting engine",logger,lfp);
+        /* write plotter batch script */
+        myplot.bfile=(char *)malloc(16);
+		strcpy(myplot.bfile,"image.gp");
+        bf=fopen(myplot.bfile, "w");
+        fprintf(bf,"reset\n");
+        fprintf(bf,"set term '%s'\n",myplot.driver);
+        fprintf(bf,"set output '%s'\n",myplot.ofile);
+        fprintf(bf,"set size ratio -1\n");
+        fprintf(bf,"set palette gray;\n");
+        fprintf(bf,"unset xtics\n");
+        fprintf(bf,"unset ytics\n");
+        fprintf(bf,"unset label\n");
+        fprintf(bf,"unset border\n");
+        fprintf(bf,"unset colorbox\n");
+        if(myplot.iftype==ASCII)
+			fprintf(bf, "plot '%s' matrix with image\n",myplot.ifile);
+		else if (myplot.iftype==BINARY)
+			fprintf(bf, "plot '%s' binary array=(%lu,%lu) format='%%int' with image\n",myplot.ifile,
+			matrix->width,matrix->height);
+        fclose(bf);
+		} else {
+			strcpy(logger->level,"WARN");
+			print_log("unknown plotting engine selected",logger,lfp);
+			strcpy(logger->level,"INFO");
+		}
+		if(!myplot.data_present){
+        /* open data output file */
+        snprintf(lmsg,255, "going to open file %s for writing", myplot.ifile);
+		print_log(lmsg,logger,lfp);
+        df=fopen(myplot.ifile, "w");
+        if(df==NULL) {
+			strcpy(logger->level,"ERR");
+			print_log("error in opening image data file for writing",logger,lfp);
+			strcpy(logger->level,"INFO");
+		}
+        /* write image file */
+	        for(i=0;i<matrix->height;i++){
+				for(j=0;j<matrix->width;j++){
+					fprintf(df,"%d ", matrix->arr[i][i]);
+				}
+				fprintf(df,"/n");
+			}        
+	        /* close data output file */
+	        fclose(df);
+			print_log("image data file written",logger,lfp);
+		}
+        /* compose total batch command */
+        snprintf(tpcmd,255,"%s%s",myplot.pcmd, myplot.bfile);
+        /* run batch command */
+        snprintf(tlm,1023,"going to run on the system command %s", tpcmd);
+        print_log(tlm,logger,lfp);
+        res = system(tpcmd);
+        fprintf(stderr, "system res = %d", res);
+        /* free all resources */
+        print_log("image plotted",logger,lfp);		
 	return 0;
 }
 
@@ -239,7 +352,8 @@ int read_array_2D(const char *ifname, struct array2D *matrix, int ftype, struct 
 	FILE *ifp; int i,j; char line[MAXCHARS]; char *sep=" ";/* field separator */
 	char *val; char msg[1024];
     strcpy(logger->caller,__func__);
-    print_log("opening image file for reading",logger,lfp);
+    snprintf(msg,1023,"opening image file %s for reading", ifname);
+    print_log(msg,logger,lfp);
 	if(ftype==ASCII){
         print_log("data format is ASCII",logger,lfp);
 		ifp = fopen(ifname, "r");
@@ -247,20 +361,23 @@ int read_array_2D(const char *ifname, struct array2D *matrix, int ftype, struct 
 	        fprintf(stderr,"ERROR: no such file %s", ifname);
 	        return 0;
 		}
-		i=0;
+		i=0;j=0;
 		while (fgets(line,MAXCHARS,ifp)){ /* loop*/
 			val = strtok(line," ");
-			j=0;
-			while(val){
+			while(val&&(val[0]!='\n')){
+				if(debug)fprintf(stderr, "val: %d len: %ld\n" , val[0], strlen(val));
 				matrix->arr[i][j]=atoi(val);
-				if (debug) fprintf(stderr,"read_array_2D() arr[%d][%d]:%d ",i,j,matrix->arr[i][j]);
+				if (debug) fprintf(stderr,"%d ",matrix->arr[i][j]);
 				val = strtok(NULL, " ");
 				j++;
+				if(i==0) matrix->width = j;
 			}
+			if (debug) fprintf(stderr,"\n");
+			j=0;
 			i++;
 		}
         print_log("ended reading image data",logger,lfp);
-		matrix->height = i; matrix->width = j-1;
+		matrix->height = i;	
 		snprintf(msg,512,"image width: %lu height: %lu \n", matrix->width,matrix->height);
 		fclose(ifp);
         print_log("image input file closed ",logger,lfp);
@@ -308,7 +425,7 @@ int save_array_2D(const char *ofname, struct array2D *matrix, int ftype, struct 
 		}
 		/* write data rows */
         for(i=0;i<matrix->height;i++){
-			for(i=0;j<matrix->width; j++);{
+			for(j=0;j<matrix->width; j++);{
 				fprintf(ofp,"%d ", matrix->arr[i][j]);
 			}
 			puts("");

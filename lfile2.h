@@ -39,6 +39,8 @@ struct curve2D{
 	unsigned long size;
 	FILE *ifp; /* pointer to the input file */
 	FILE *ofp; /* pointer to the output file */
+	char ifile[256]; /* data input file name (e.g. "data.asc" or "data.bin")*/
+	char ofile[256]; /* plot output file name (e.g. "myplot.png")*/
 	int iftype; /* input file format */
 	int oftype; /* output file format */
 	struct LOG *logger;
@@ -51,7 +53,12 @@ struct array2D{
 	unsigned long width; /* columns (NAXIS2) (sample)*/
 	FILE *ifp; /* pointer to the input file */
 	FILE *ofp; /* pointer to the output file */
+	char ifile[256]; /* data input file name (e.g. "data.asc" or "data.bin")*/
+	char ofile[256]; /* plot output file name (e.g. "myplot.png")*/
+	int iftype; /* input file format */
+	int oftype; /* output file format */
 	struct LOG *logger;
+	struct PLOTTER *plotter;
 };
 
 int init_curve_2D(struct curve2D *curve, struct LOG *logger, FILE *lfp);
