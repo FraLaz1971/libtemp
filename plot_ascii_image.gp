@@ -1,4 +1,6 @@
 set size ratio -1
+set term png
+set output 'mercury.png'
 set palette gray;
 unset xtics
 unset ytics

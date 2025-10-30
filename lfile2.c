@@ -425,7 +425,7 @@ int save_array_2D(const char *ofname, struct array2D *matrix, int ftype, struct 
 		}
 		/* write data rows */
         for(i=0;i<matrix->height;i++){
-			for(j=0;j<matrix->width; j++);{
+			for(j=0;j<matrix->width; j++){
 				fprintf(ofp,"%d ", matrix->arr[i][j]);
 			}
 			puts("");
