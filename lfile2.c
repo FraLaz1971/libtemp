@@ -85,19 +85,31 @@ int plot_curve_2D(struct curve2D *curve, int ptype, struct LOG *logger, FILE *lf
 		} else if (ptype==PLOTUTILS){
 			myplot.engine=PLOTUTILS;
 			print_log("selected plotutils graph plotting engine",logger,lfp);
+#ifdef __unix__
+	if(__unix__)
 			strcpy(myplot.pcmd,"sh ");
+#else
+#if defined (_WIN32) || defined (_WIN64)
+			strcpy(myplot.pcmd,"cmd /c ");
+#endif
+#endif
         /* write plotter batch script */
         myplot.bfile=(char *)malloc(16);
+#ifdef __unix__
 	if(__unix__)
 		strcpy(myplot.bfile,"myplot.sh");
-	else
+#else
+#if defined (_WIN32) || defined (_WIN64)
 		strcpy(myplot.bfile,"myplot.bat");
+#endif
+#endif
 	myplot.xlabel=(char *)malloc(16); strcpy(myplot.xlabel,"x-axis");
 	myplot.ylabel=(char *)malloc(16); strcpy(myplot.ylabel,"y-axis");
 	myplot.title=(char *)malloc(32); strcpy(myplot.title, "Interesting Curve");
         bf=fopen(myplot.bfile, "w");
+#ifdef __unix__
 	if(__unix__)
-	        fprintf(bf,"#!/bin/bash\n");
+	    fprintf(bf,"#!/bin/bash\n");
         fprintf(bf,"graph -T '%s' \\\n",myplot.driver);
         fprintf(bf, "-I i \\\n");
         fprintf(bf, "-m 3 -C \\\n");
@@ -106,6 +118,18 @@ int plot_curve_2D(struct curve2D *curve, int ptype, struct LOG *logger, FILE *lf
         fprintf(bf,"-L '%s' \\\n",myplot.title);
         fprintf(bf, "'%s' > \\\n",myplot.ifile);
         fprintf(bf,"'%s'\n",myplot.ofile);
+#else
+#if defined (_WIN32) || defined (_WIN64)
+        fprintf(bf,"graph -T '%s' ^\n",myplot.driver);
+        fprintf(bf, "-I i ^\n");
+        fprintf(bf, "-m 3 -C ^\n");
+        fprintf(bf,"-X '%s' ^\n",myplot.xlabel);
+        fprintf(bf,"-Y '%s' ^\n",myplot.ylabel);
+        fprintf(bf,"-L '%s' ^\n",myplot.title);
+        fprintf(bf, "'%s' > ^\n",myplot.ifile);
+        fprintf(bf,"%s\n", myplot.ofile);
+#endif
+#endif
         fclose(bf);
 		} else {
 			strcpy(logger->level,"WARN");

@@ -45,7 +45,6 @@ int main(int argc, char **argv){
 	strcpy(log2.caller,"mfile2::main()");
 	print_log("after strcpy(curve.plotter->ofile,ofname)",&log2,lfp2); 
     curve.oftype=GIF;
-///*
 	strcpy(log2.caller,"mfile2::main()");
 	print_log("going to plot a binary data file with plotutils graph",&log2,lfp2);
     curve.plotter->data_present=1;

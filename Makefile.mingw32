@@ -1,0 +1,31 @@
+CC=gcc -g -O2
+LD=gcc
+CFLAGS=
+LDFLAGS=
+LIBS=-lm
+RM=del /Q /F
+
+.PHONY: all clean
+
+all: mfile1.exe mfile2.exe mfile3.exe mfile4.exe
+
+lfile1.o: lfile1.c
+	$(CC) -c $<
+mfile1.o: mfile1.c
+	$(CC) -c $<
+mfile2.o: mfile2.c
+	$(CC) -c $<
+mfile3.o: mfile3.c
+	$(CC) -c $<
+mfile4.o: mfile4.c
+	$(CC) -c $<
+mfile1.exe: mfile1.o lfile1.o
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile2.exe: mfile2.o lfile1.o lfile2.o
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile3.exe: mfile3.o lfile1.o lfile2.o
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile4.exe: mfile4.o lfile1.o lfile2.o
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+clean:
+	$(RM) *.o mfile1.exe mfile2.exe mfile3.exe mfile4.exe
