@@ -17,9 +17,9 @@ lfile1$(OEXT): lfile1.c
 lfile2$(OEXT): lfile2.c
 	$(CC) -c $<
 lfile3$(OEXT): lfile3.c
-	$(CC) -c $<
+	$(CC) $(CFLAGS) -c $<
 fimage$(OEXT): fimage.c
-	$(CC) -c $<
+	$(CC) $(CFLAGS) -c $<
 mfile1$(OEXT): mfile1.c
 	$(CC) -c $<
 mfile2$(OEXT): mfile2.c
@@ -29,7 +29,7 @@ mfile3$(OEXT): mfile3.c
 mfile4$(OEXT): mfile4.c
 	$(CC) -c $<
 mfile5$(OEXT): mfile5.c
-	$(CC) -c $<
+	$(CC) $(CFLAGS) -c $<
 mfile1$(EEXT): mfile1$(OEXT) lfile1$(OEXT)
 	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
 mfile2$(EEXT): mfile2$(OEXT) lfile1$(OEXT) lfile2$(OEXT)

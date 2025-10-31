@@ -48,7 +48,7 @@ int write_pds_file(int pdsver, char *fname,struct PDS *pds, int oftype,struct LO
 	return 0;
 }
 int read_pds_file(int pdsver, char *fname,struct PDS *pds, int iftype,struct LOG *log, FILE *lfp){
-	FILE *ifp; int i,j,res; char line[MAXCHARS]; char *sep=",";/* field separator */
+	FILE *ifp; int i,j,res; char line[4096]; char *sep=",";/* field separator */
 	char *val; char msg[1024];
     strcpy(log->caller,__func__);
 	snprintf(msg,255,"starting reading pds version %d file(s) %s",pdsver,fname);
@@ -64,10 +64,10 @@ int read_pds_file(int pdsver, char *fname,struct PDS *pds, int iftype,struct LOG
 	        return 0;
 		}
 		/* read/skip intestation row */
-		res = fgets(line,MAXCHARS,ifp);
+		strcpy(val,fgets(line,MAXCHARS,ifp));
 		i=0;j=0;
 		while (fgets(line,MAXCHARS,ifp)){ /* loop on the lines (rows) */
-			val = strtok(line,",");
+			val = strtok(line,sep);
 			while(val&&(val[0]!='\n')){ /* loop on the fields (columns) */
 				if(debug)fprintf(stderr, "%s " , val);
 				if(debug)fprintf(stderr, "reading row %d column %d \n",i ,j);
@@ -144,7 +144,7 @@ int read_pds_file(int pdsver, char *fname,struct PDS *pds, int iftype,struct LOG
 					print_log(msg,log,lfp);
 				}
 				if (debug) fprintf(stderr,"%s ",val);
-				val = strtok(NULL, " ");
+				val = strtok(NULL, sep);
 				j++;
 				if(i==0) pds->stchk->ncols = j;
 			}

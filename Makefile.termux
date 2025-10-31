@@ -1,19 +1,44 @@
-CC=gcc
+CC=gcc -g -O2
 LD=gcc
-CFLAGS=
-LDFLAGS=
-LIBS=
+CFLAGS=-I$(CFITSIO_HOME)/include
+LDFLAGS=-L$(CFITSIO_HOME)/lib
+LIBS=-lm
+CFITSIO_LIBS=-lcfitsio -lm
+OEXT=.o
+EEXT=
 RM=rm -rf
 
 .PHONY: all clean
 
-all: mfile1
+all: mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) mfile5$(EEXT)
 
-lfile1.o: lfile1.c
-	gcc -c $<
-mfile1.o: mfile1.c
-	gcc -c $<
-mfile1: mfile1.o lfile1.o
-	$(LD) $^ -o $@
+lfile1$(OEXT): lfile1.c
+	$(CC) -c $<
+lfile2$(OEXT): lfile2.c
+	$(CC) -c $<
+lfile3$(OEXT): lfile3.c
+	$(CC) $(CFLAGS) -c $<
+fimage$(OEXT): fimage.c
+	$(CC) $(CFLAGS) -c $<
+mfile1$(OEXT): mfile1.c
+	$(CC) -c $<
+mfile2$(OEXT): mfile2.c
+	$(CC) -c $<
+mfile3$(OEXT): mfile3.c
+	$(CC) -c $<
+mfile4$(OEXT): mfile4.c
+	$(CC) -c $<
+mfile5$(OEXT): mfile5.c
+	$(CC) $(CFLAGS) -c $<
+mfile1$(EEXT): mfile1$(OEXT) lfile1$(OEXT)
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile2$(EEXT): mfile2$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile3$(EEXT): mfile3$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile4$(EEXT): mfile4$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
+	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
+mfile5$(EEXT): mfile5$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
+	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
 clean:
-	$(RM) *.o mfile1
+	$(RM) *$(OEXT) mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) mfile5$(EEXT)
