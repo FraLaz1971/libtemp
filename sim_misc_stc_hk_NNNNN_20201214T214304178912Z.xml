@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://pds.nasa.gov/pds4/pds/v1/PDS4_PDS_1700.sch"
+    href="http://pds.nasa.gov/pds4/pds/geom/v1/PDS4_GEOM_1700_1401.sch"
+    href="http://pds.nasa.gov/pds4/pds/v1/PDS4_IMG_1100.sch"
+    href="http://psa.esa.int/psa/v1/PDS4_PSA_1000.sch"
+    href="http://psa.esa.int/psa/v1/PDS4_PSA_BC_1000.sch"
+    href="http://psa.esa.int/psa/bc/simbio/v1/simbio.sch"
+    schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<Product_Observational xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:geom="http://pds.nasa.gov/pds4/geom/v1" xmlns:img="http://pds.nasa.gov/pds4/img/v1" xmlns:psa="http://psa.esa.int/psa/v1" xmlns:simbio="http://psa.esa.int/psa/bc/simbio/v1" xmlns:pds4="http://pds.nasa.gov/pds4/pds/v1" xsi:schemaLocation="     http://pds.nasa.gov/pds4/pds/v1 http://pds.nasa.gov/pds4/pds/v1/PDS4_PDS_1700.xsd     http://pds.nasa.gov/pds4/geom/v1 http://pds.nasa.gov/pds4/geom/v1/PDS4_GEOM_1700_1401.xsd     http://psa.esa.int/psa/v1 http://psa.esa.int/psa/v1/PDS4_PSA_LDD_1000.xsd     http://psa.esa.int/psa/bc/simbio/v1 http://psa.esa.int/psa/bc/simbio/v1/PDS4_PSA_BC_SIM_LDD_1000.xsd     http://pds.nasa.gov/pds4/img/v1 http://pds.nasa.gov/pds4/img/v1/PDS4_IMG_1100.xsd">
+  <Identification_Area>
+    <!-- PDS4 rules/recommendation for logical_identifier naming conventions TBD -->
+    <logical_identifier>urn:esa:psa:bc_mpo_simbio-sys:data_raw:sim_raw_stc_hk_template</logical_identifier>
+    <version_id>1.0</version_id>
+    <title>BEPICOLOMBO MPO SIMBIO-SYS MERCURY ORBIT STC HOUSEKEEPING DATA PRODUCT</title>
+    <information_model_version>1.7.0.0</information_model_version>
+    <product_class>Product_Observational</product_class>
+    <Citation_Information>
+      <author_list>$AUTHOR_LIST</author_list>
+      <editor_list>$EDITOR_LIST</editor_list>
+      <publication_year>2017</publication_year>
+      <keyword>$KEYWORD</keyword>
+      <description>$CITATION_DESCRIPTION</description>
+    </Citation_Information>
+    <Modification_History>
+      <Modification_Detail>
+        <modification_date>2016-12-15</modification_date>
+        <version_id>1.0</version_id>
+        <description>
+                    Preliminary version of PDS4 label for SIMBIO-SYS STC housekeeping data
+                </description>
+      </Modification_Detail>
+    </Modification_History>
+  </Identification_Area>
+  <Observation_Area>
+    <Time_Coordinates>
+      <start_date_time>2020-12-14T21:43:04.178912Z</start_date_time>
+      <stop_date_time>2020-12-15T02:37:25.700694Z</stop_date_time>
+    </Time_Coordinates>
+    <Primary_Result_Summary>
+      <purpose>Science</purpose>
+      <processing_level>Raw</processing_level>
+      <description>
+                STC INSTRUMENT HOUSKEEPING.
+            </description>
+    </Primary_Result_Summary>
+    <!-- Mission -->
+    <Investigation_Area>
+      <name>BepiColombo</name>
+      <type>Mission</type>
+      <Internal_Reference>
+        <lid_reference>urn:esa:psa:bc:context:investigation.bc</lid_reference>
+        <reference_type>data_to_investigation</reference_type>
+      </Internal_Reference>
+    </Investigation_Area>
+    <Observing_System>
+      <name>BepiColombo MPO SIMBIO-SYS</name>
+      <!-- Instrument Host -->
+      <Observing_System_Component>
+        <name>Mercury Planetary Orbiter</name>
+        <type>Spacecraft</type>
+        <Internal_Reference>
+          <lid_reference>urn:esa:psa:context:instrument_host:spacecraft.mpo</lid_reference>
+          <reference_type>is_instrument_host</reference_type>
+        </Internal_Reference>
+      </Observing_System_Component>
+      <!-- Instrument -->
+      <Observing_System_Component>
+        <name>SIMBIO-SYS</name>
+        <type>Instrument</type>
+        <description>Spectrometers and Images for MPO BepiColombo Integrated Observatory System</description>
+        <Internal_Reference>
+          <lid_reference>urn:esa:psa:context:instrument:simbio-sys.mpo</lid_reference>
+          <reference_type>is_instrument</reference_type>
+        </Internal_Reference>
+      </Observing_System_Component>
+    </Observing_System>
+    <!-- Target -->
+    <Target_Identification>
+      <name>MERCURY</name>
+      <type>Planet</type>
+      <Internal_Reference>
+        <lid_reference>urn:nasa:pds:target.MERCURY</lid_reference>
+        <reference_type>data_to_target</reference_type>
+      </Internal_Reference>
+    </Target_Identification>
+    <!-- For VIHI could be necessary Discipline_area, for the wavelengths list and geomtery informations -->
+    <!-- =========================================================================================== -->
+    <!-- Mission Area                                                                                -->
+    <!-- =========================================================================================== -->
+    <Mission_Area>
+      <!-- =========================================================================================== -->
+      <!-- PSA & BepiColombo specific attributes                                                       -->
+      <!-- =========================================================================================== -->
+      <!-- Diagnostic HK no geometry information -->
+      <psa:Mission_Information>
+        <psa:spacecraft_clock_start_count>0/1.0</psa:spacecraft_clock_start_count>
+        <psa:spacecraft_clock_stop_count>0/2.0</psa:spacecraft_clock_stop_count>
+        <psa:mission_phase_name>Cruise</psa:mission_phase_name>
+        <psa:mission_phase_identifier>cruise</psa:mission_phase_identifier>
+        <psa:start_orbit_number>0</psa:start_orbit_number>
+        <psa:stop_orbit_number>0</psa:stop_orbit_number>
+      </psa:Mission_Information>
+      <psa:Sub-Instrument>
+        <psa:identifier>STC</psa:identifier>
+        <psa:name>Stereo Channel</psa:name>
+        <psa:type>Stereo Imaging Camera</psa:type>
+      </psa:Sub-Instrument>
+      <!-- Diagnostic HK no Observation Context info -->
+      <psa:Processing_Context>
+        <!-- Discussion needed to decide processing context attributes applicable / required for SIMBIO-SYS -->
+        <psa:processing_software_title>sim-tm2raw</psa:processing_software_title>
+        <psa:processing_software_version>0.1</psa:processing_software_version>
+        <psa:Processing_Inputs>
+          <psa:Processing_Input_Identification>
+            <psa:type>telemetry</psa:type>
+            <psa:file_name>telemetry_input_file_name.xml</psa:file_name>
+          </psa:Processing_Input_Identification>
+        </psa:Processing_Inputs>
+      </psa:Processing_Context>
+      <!-- =========================================================================================== -->
+      <!-- SIMBIO-SYS specific attributes                                                              -->
+      <!-- =========================================================================================== -->
+      <!-- To be removed, see psa:Sub-Instrument attributes
+            <simbio:detector_id>VIHI</simbio:detector_id>
+            <simbio:detector_name>VISIBLE IR HYPERSPECTRAL IMAGER</simbio:detector_name>
+            -->
+      <!-- Need to add channel number and filter id -->
+      <!--   <img:Exposure_Duration unit="second">5</img:Exposure_Duration>-->
+      <!-- Diagnostic HK no no SIMBIO HRIC fields, no  img:Imaging_Instrument_Parameters -->
+    </Mission_Area>
+  </Observation_Area>
+  <File_Area_Observational>
+    <!-- ============================================================== -->
+    <!-- File Information                                               -->
+    <!-- ============================================================== -->
+    <File>
+      <file_name>sim_misc_stc_hk_NNNNN_20201214T214304178912Z.csv</file_name>
+      <creation_date_time>2020-12-21</creation_date_time>
+      <file_size unit="byte">943845</file_size>
+      <records>2121</records>
+      <md5_checksum>c7ef473d47f6a73e4c3c9b9de480a8c2</md5_checksum>
+    </File>
+    <Table_Character>
+      <offset unit="byte">428</offset>
+      <records>1</records>
+      <record_delimiter>Carriage-Return Line-Feed</record_delimiter>
+      <Record_Character>
+        <fields>22</fields>
+        <groups>0</groups>
+        <record_length unit="byte">426</record_length>
+        <Field_Character>
+          <name>"Acquisition Time UTC"</name>
+          <field_number>1</field_number>
+          <field_location unit="byte">1</field_location>
+          <data_type>ASCII_Date_Time_YMD_UTC</data_type>
+          <field_length unit="byte">20</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Acquisition Time SCET"</name>
+          <field_number>2</field_number>
+          <field_location unit="byte">22</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">22</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Last Event"</name>
+          <field_number>3</field_number>
+          <field_location unit="byte">45</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">11</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded Test Mode"</name>
+          <field_number>4</field_number>
+          <field_location unit="byte">57</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">20</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded TEC Status"</name>
+          <field_number>5</field_number>
+          <field_location unit="byte">78</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">21</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded Detector Status"</name>
+          <field_number>6</field_number>
+          <field_location unit="byte">100</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">26</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded TEC TRef"</name>
+          <field_number>7</field_number>
+          <field_location unit="byte">127</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">19</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded TEC N_P"</name>
+          <field_number>8</field_number>
+          <field_location unit="byte">147</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">18</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded TEC N_I"</name>
+          <field_number>9</field_number>
+          <field_location unit="byte">166</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">18</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded TEC N_E"</name>
+          <field_number>10</field_number>
+          <field_location unit="byte">185</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">18</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Anti Wind-Up Status"</name>
+          <field_number>11</field_number>
+          <field_location unit="byte">204</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">20</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Anti Wind-Up Method"</name>
+          <field_number>12</field_number>
+          <field_location unit="byte">225</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">20</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Commanded TEC N_SS"</name>
+          <field_number>13</field_number>
+          <field_location unit="byte">246</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">19</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"PE Address"</name>
+          <field_number>14</field_number>
+          <field_location unit="byte">266</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">11</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"PE Address Content"</name>
+          <field_number>15</field_number>
+          <field_location unit="byte">278</field_location>
+          <data_type>ASCII_Integer</data_type>
+          <field_length unit="byte">19</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Temperature FPA 1"</name>
+          <field_number>16</field_number>
+          <field_location unit="byte">298</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">18</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Temperature FPA 2"</name>
+          <field_number>17</field_number>
+          <field_location unit="byte">317</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">18</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Temperature PE"</name>
+          <field_number>18</field_number>
+          <field_location unit="byte">336</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">15</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Temperature Channel 1"</name>
+          <field_number>19</field_number>
+          <field_location unit="byte">352</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">22</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Temperature Channel 2"</name>
+          <field_number>20</field_number>
+          <field_location unit="byte">375</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">22</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"Voltage at 3.3V"</name>
+          <field_number>21</field_number>
+          <field_location unit="byte">398</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">16</field_length>
+        </Field_Character>
+        <Field_Character>
+          <name>"TEC Current"</name>
+          <field_number>22</field_number>
+          <field_location unit="byte">415</field_location>
+          <data_type>ASCII_Real</data_type>
+          <field_length unit="byte">12</field_length>
+        </Field_Character>
+      </Record_Character>
+    </Table_Character>
+  </File_Area_Observational>
+</Product_Observational>
