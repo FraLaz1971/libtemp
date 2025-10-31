@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <time.h>
-static size_t ic;
+static size_t ic; /* autoincrement ID counter */
 struct LOG{
 	char utc[32];
 	char host[24];
@@ -36,7 +36,7 @@ struct TM{
 #if defined(_MSC_VER) && _MSC_VER < 1900
 double round(double number);
 #endif
-
+int init_log(struct LOG *log);
 int init_db(struct TM *tm, struct LOG *log);
 int populate_db(struct TM *tm, FILE *ifp);
 int dump_db(struct TM *tm, FILE *ofp);

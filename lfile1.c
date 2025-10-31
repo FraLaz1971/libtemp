@@ -15,8 +15,28 @@ double round(double number)
     return number < 0.0 ? ceil(number - 0.5) : floor(number + 0.5);
 }
 #endif
+int init_log(struct LOG *log){
+	char temp[2];
+    fprintf(stderr,"init_log() init operations\n");
+	strcpy(log->utc, "2025-06-09T12:00:00");
+	if (debug) printf("init_log() utc: %s\n",log->utc);
+	strcpy(log->host, "localhost");
+	if (debug) printf("init_log() host: %s\n",log->host);
+	strcpy(log->caller, "lfile1::init_log()");
+	if (debug) printf("init_log() caller: %s\n",log->caller);
+	strcpy(log->level, "INFO");
+	if (debug) printf("init_log() level: %s\n",log->level);
+	strcpy(log->msg, "keep going");
+	if (debug) printf("init_log() msg: %s\n",log->msg);
+	strcpy(temp,"|");
+	log->FS=temp[0];
+	if (debug) printf("init_log() FS: %c\n",log->FS);
+	strcpy(log->RS,"\r\n");
+	if (debug) printf("init_log() RS: %s\n",log->RS);
+  return 0;
+}
 
- int init_db(struct TM *tm, struct LOG *log){
+int init_db(struct TM *tm, struct LOG *log){
 	char temp[2];
     fprintf(stderr,"init_db() init operations\n");
 	ic=0;
