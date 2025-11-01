@@ -44,7 +44,7 @@ int save_bin(struct image *img){
   /* open fits file for writing */
 //  if (fits_create_file(&img->ofp, img->fname, &img->status)) /* create new FITS file */
 //         printerror( img->status );           /* call printerror if error occurs */
-  img->ofp=fopen(img->fname,"wb");
+  img->ofp=(fitsfile *)fopen(img->fname,"wb");
 //  fprintf(stderr,"save_bin() raw file created\n");
   /* create the image */
 //  if ( fits_create_img(img->ofp, img->bitpix, img->naxis, img->naxes, &img->status) )
@@ -60,30 +60,30 @@ int save_bin(struct image *img){
   fprintf(stderr,"save_bin() size of the array %ld\n",img->nelements);
   if(img->bitpix==32){
         fprintf(stderr,"save_bin() going to write a 32 bits int image \n");
-        fwrite(img->arr,img->nelements*4,1,img->ofp);
+        fwrite(img->arr,img->nelements*4,1,(FILE *)img->ofp);
 //  if ( fits_write_img(img->ofp, TINT, img->fpixel, img->nelements, img->arr, &img->status) )
 //        printerror( img->status );
   } else if (img->bitpix==16) {
   fprintf(stderr,"save_bin() going to write a 16 bits int image \n");
-        fwrite(img->arr16,img->nelements*2,1,img->ofp);
+        fwrite(img->arr16,img->nelements*2,1,(FILE *)img->ofp);
 //  if ( fits_write_img(img->ofp, TSHORT, img->fpixel, img->nelements, img->arr16, &img->status) )
 //        printerror( img->status );
   } else if (img->bitpix==8){
   fprintf(stderr,"save_bin() going to write a 8 bits int image \n");
 //  if ( fits_write_img(img->ofp, TBYTE, img->fpixel, img->nelements, img->arr8, &img->status) )
 //        printerror( img->status );
-        fwrite(img->arr8,img->nelements,1,img->ofp);
+        fwrite(img->arr8,img->nelements,1,(FILE *)img->ofp);
   } else if (img->bitpix==-32){
   fprintf(stderr,"save_bin() going to write a 32 bits float image \n");
 //  if ( fits_write_img(img->ofp, TFLOAT, img->fpixel, img->nelements, img->arr8, &img->status) )
 //        printerror( img->status );
-        fwrite(img->arr,img->nelements,1,img->ofp);
+        fwrite(img->arr,img->nelements,1,(FILE *)img->ofp);
   }
   fprintf(stderr,"save_bin() raw file written\n");
   /* close fits file */
   //if ( fits_close_file(img->ofp, &img->status) ) /* close the file */
          //printerror( img->status );           
-         fclose(img->ofp);
+         fclose((FILE *)img->ofp);
   fprintf(stderr,"save_bin() raw file closed\n");
   return img->status;
 }
@@ -133,8 +133,12 @@ int init_table(struct image *img){
   remove(img->fname);
   fprintf(stderr,"init_table() file %s removed\n",img->fname);
   /* open fits file for writing */
+  fprintf(stderr,"init_table() going to open file for writing\n");
+  
+  img->status=0;
   if (fits_create_file(&img->ofp, img->fname, &img->status)) /* create new FITS file */
          printerror( img->status );           /* call printerror if error occurs */
+
   fprintf(stderr,"init_table() fits file created\n");
   return img->status;
 }

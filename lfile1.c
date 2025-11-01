@@ -4,7 +4,7 @@
 #include <math.h>
 #include <string.h>
 #include "lfile1.h"
-#ifdef _MSC_VER
+#if defined (_WIN32) || defined (_WIN64)
 #include <windows.h>
 #endif
 #define WITHMS 1
@@ -177,10 +177,12 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
     char smon[3],sday[3],shour[3],smin[3],ssec[3],smsec[4];
 	char *dt; char msgbuf[2048]; int res;
     unsigned long nano;
-#ifndef _MSC_VER
+#ifdef __unix__
     struct timespec tres;
 #else
+#if defined (_WIN32) || defined (_WIN64)
     SYSTEMTIME st, lt;
+#endif
 #endif
 	strcpy(log->msg,msg);
 	    // Get current time
@@ -190,7 +192,7 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
     clock_gettime(CLOCK_REALTIME,&tres);
     nano = tres.tv_nsec;
 #else
-#ifdef _MSC_VER
+#if defined (_WIN32) || defined (_WIN64)
     GetSystemTime(&st);
     GetLocalTime(&lt);
     if (debug) printf("print_log() (MSVC) The system time is: %02d:%02d\n", st.wHour, st.wMinute);

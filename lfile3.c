@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "lfile3.h"
 #include "fimage.h"
+#include "fitsio.h"
 extern int debug;
 int init_pds(struct PDS *pds){
 	pds->image=NULL;
@@ -53,20 +54,24 @@ int read_pds_file(int pdsver, char *fname,struct PDS *pds, int iftype,struct LOG
     strcpy(log->caller,__func__);
 	snprintf(msg,255,"starting reading pds version %d file(s) %s",pdsver,fname);
 	print_log(msg,log,lfp);
-
+	val=(char *)malloc(4096); 
+	pds->stchk->size=0;pds->stchk->ncols=0;
 	if(iftype==ASCII_TABLE){
         print_log("data type is ASCII_TABLE",log,lfp);
 		snprintf(msg,1023,"opening data table file %s for reading", fname);
 		print_log(msg,log,lfp);
 		ifp = fopen(fname, "r");
-		if (ifp == NULL) {
+		snprintf(msg,1023,"input file pointer ifp = %p", ifp);
+		print_log(msg,log,lfp);
+		if (ifp == 0) {
 	        fprintf(stderr,"ERROR: no such file %s", fname);
-	        return 0;
+	        exit(1);
 		}
+		print_log("skipping the first row",log,lfp);
 		/* read/skip intestation row */
-		strcpy(val,fgets(line,MAXCHARS,ifp));
+		strcpy(val,fgets(line,4096,ifp));
 		i=0;j=0;
-		while (fgets(line,MAXCHARS,ifp)){ /* loop on the lines (rows) */
+		while (fgets(line,4096,ifp)){ /* loop on the lines (rows) */
 			val = strtok(line,sep);
 			while(val&&(val[0]!='\n')){ /* loop on the fields (columns) */
 				if(debug)fprintf(stderr, "%s " , val);
@@ -158,6 +163,7 @@ int read_pds_file(int pdsver, char *fname,struct PDS *pds, int iftype,struct LOG
         print_log(msg,log,lfp);
 		fclose(ifp);
 	}
+		free(val);
         print_log("ended reading data",log,lfp);
 	return 0;
 }
