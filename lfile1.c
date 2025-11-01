@@ -186,10 +186,11 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
 	    // Get current time
     t = time(NULL);
 	if (debug) printf("print_log() t: %ld\n",t);
-#ifndef _MSC_VER
+#ifdef __unix__
     clock_gettime(CLOCK_REALTIME,&tres);
     nano = tres.tv_nsec;
 #else
+#ifdef _MSC_VER
     GetSystemTime(&st);
     GetLocalTime(&lt);
     if (debug) printf("print_log() (MSVC) The system time is: %02d:%02d\n", st.wHour, st.wMinute);
@@ -197,6 +198,7 @@ int print_log(char *msg, struct LOG *log, FILE *lfp){
     if (debug) printf("print_log() (MSVC) The system time ms are: %03d\n", st.wMilliseconds);
     if (debug) printf("print_log() (MSVC) The local time ms are: %03d\n", lt.wMilliseconds);
     nano = lt.wMilliseconds*1000000;
+#endif
 #endif
 	if (debug) printf("print_log() nano: %lu\n",nano);
     s = (double)t+nano*0.000000001;
