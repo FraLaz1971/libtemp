@@ -1,28 +1,54 @@
-CC=cl
+CC=cl /MD
 LD=link
-CFLAGS=
-LDFLAGS=
+CFITSIO_HOME=C:\cfitsio\cfitsiovc
+CFLAGS=/I$(CFITSIO_HOME)
+LDFLAGS=/LIBPATH:"$(CFITSIO_HOME)"
 LIBS=
+CFITSIO_LIBS=cfitsio.lib
+OEXT=.obj
+EEXT=.exe
 RM=del /q /f
-all: mfile1.exe mfile2.exe mfile3.exe mfile4.exe
-lfile1.obj: lfile1.c
+all: mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT)
+lfile1$(OEXT): lfile1.c
 	$(CC) /c $**
-mfile1.obj: mfile1.c
+lfile2$(OEXT): lfile2.c
 	$(CC) /c $**
-mfile2.obj: mfile2.c
+fimage$(OEXT): fimage.c
+	$(CC) $(CFLAGS) /c $**
+lfile3$(OEXT): lfile3.c
+	$(CC) $(CFLAGS) /c $**
+mfile1$(OEXT): mfile1.c
 	$(CC) /c $**
-mfile3.obj: mfile3.c
+mfile2$(OEXT): mfile2.c
 	$(CC) /c $**
-mfile4.obj: mfile4.c
+mfile3$(OEXT): mfile3.c
 	$(CC) /c $**
-mfile1.exe: mfile1.obj lfile1.obj
+mfile4$(OEXT): mfile4.c
+	$(CC) /c $**
+mfile5$(OEXT): mfile5.c
+	$(CC) $(CFLAGS) /c $**
+mfile6$(OEXT): mfile6.c
+	$(CC) $(CFLAGS) /c $**
+mfile7$(OEXT): mfile7.c
+	$(CC) $(CFLAGS) /c $**
+mfile8$(OEXT): mfile8.c
+	$(CC) $(CFLAGS) /c $**
+mfile1$(EEXT): mfile1$(OEXT) lfile1$(OEXT)
 	$(LD) /out:$@ $**
-mfile2.exe: mfile2.obj lfile1.obj lfile2.obj
+mfile2$(EEXT): mfile2$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
 	$(LD) /out:$@ $**
-mfile3.exe: mfile3.obj lfile1.obj lfile2.obj
+mfile3$(EEXT): mfile3$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
 	$(LD) /out:$@ $**
-mfile4.exe: mfile4.obj lfile1.obj lfile2.obj
+mfile4$(EEXT): mfile4$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
 	$(LD) /out:$@ $**
+mfile5$(EEXT): mfile5$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
+	$(LD) /out:$@ $** $(LDFLAGS) $(CFITSIO_LIBS)
+mfile6$(EEXT): mfile6$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
+	$(LD) /out:$@ $** $(LDFLAGS) $(CFITSIO_LIBS)
+mfile7$(EEXT): mfile7$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
+	$(LD) /out:$@ $** $(LDFLAGS) $(CFITSIO_LIBS)
+mfile8$(EEXT): mfile8$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
+	$(LD) /out:$@ $** $(LDFLAGS) $(CFITSIO_LIBS)
 clean:
-	$(RM) *.obj mfile1.exe mfile2.exe mfile3.exe mfile4.exe
+	$(RM) *.manifest *$(OEXT) mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT)
 cleanall: clean
