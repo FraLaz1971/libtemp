@@ -3,7 +3,7 @@
 #include <string.h>
 #include "fimage.h"
 #include "fitsio.h"
-#define STRLEN 128
+#define STRLEN 16
 int main(int argc, char ** argv){
     fitsfile *fptr;       /* pointer to the FITS file, */
     int status,i;
@@ -29,7 +29,7 @@ int main(int argc, char ** argv){
     if (argc < 4) {
       fprintf(stderr,"usage:%s <filename.fits> <ncols> <nrows>\n",argv[0]);
       return 1;
-    } 
+    }
     strcpy(filename,argv[1]);
     tfields = atoi(argv[2]); /* table will have tfields columns> */
     nrows  = atoi(argv[3]);  /* table will have nrows rows   */
@@ -66,10 +66,11 @@ int main(int argc, char ** argv){
 
     strcpy(planet[0],"Mercury");
     strcpy(planet[1],"Venus");
-    strcpy(planet[2],"Earth"); 
+    strcpy(planet[2],"Earth");
     strcpy(planet[3],"Mars");
     strcpy(planet[4],"Jupiter");
     strcpy(planet[5],"Saturn");
+   fprintf(stderr,"planet set\n");
 
     diameter[0] =  4880;
     diameter[1] =  12112;
@@ -77,6 +78,7 @@ int main(int argc, char ** argv){
     diameter[3] =  6800;
     diameter[4] =  143000;
     diameter[5] =  121000;
+   fprintf(stderr,"diameter set\n");
 
 
     density[0] =  5.1f;
@@ -85,6 +87,7 @@ int main(int argc, char ** argv){
     density[3] =  3.94f;
     density[4] =  1.33f;
     density[5] =  0.69f;
+   fprintf(stderr,"density set\n");
 
 
     remove(filename);               /* Delete old file */
@@ -94,21 +97,26 @@ int main(int argc, char ** argv){
     if (fits_create_file(&fptr, filename, &status)) /* create the file */
          printerror( status );           /* call printerror() */
 
+   fprintf(stderr,"fits file created \n");
 
 /* append a new empty ASCII table onto the FITS fil>*/
     if ( fits_create_tbl( fptr, BINARY_TBL, nrows, tfields, ttype, tform,
                 tunit, extname, &status) )
                 printerror( status );
+   fprintf(stderr,"binary table created \n");
     firstrow  = 1;  /* first row in table to write   */     firstelem = 1;  /* first element in row  (ignored i */
     /* write names to the first column (character strin> */
     /* write diameters to the second column (longs) */      /* write density to the third column (floats) */
    fits_write_col(fptr, TSTRING, 1, firstrow, firstelem, nrows, planet, 
 		   &status);
-    /* write the array of unsigned integers to the FITS */
+    fprintf(stderr,"column 1 written \n");
+   /* write the array of unsigned integers to the FITS */
    fits_write_col(fptr, TLONG, 2, firstrow, firstelem, nrows, diameter,
                    &status);
+    fprintf(stderr,"column 2 written \n");
    fits_write_col(fptr, TFLOAT, 3, firstrow, firstelem, nrows, density,
                    &status);
+    fprintf(stderr,"column 3 written \n");
     free(ttype);
     free(tform);
     free(tunit);
@@ -117,8 +125,10 @@ int main(int argc, char ** argv){
     free(planet);
     free(diameter);
     free(density);
+    fprintf(stderr,"freed memory \n");
     if ( fits_close_file(fptr, &status) )
          printerror( status );
+    fprintf(stderr,"fits file closed \n");
   return 0;
 }
 
