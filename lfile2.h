@@ -37,6 +37,11 @@ struct PLOTTER{
 struct curve2D{
 	int *x; /* abscissa (x-axis)*/
 	int *y; /* ordinata (y-axis)*/
+	double *xd; /* abscissa (x-axis)*/
+	double *yd; /* ordinata (y-axis)*/
+	char **ttype;
+	char **tform;
+	char **tunit;
 	unsigned long size;
 	FILE *ifp; /* pointer to the input file */
 	FILE *ofp; /* pointer to the output file */

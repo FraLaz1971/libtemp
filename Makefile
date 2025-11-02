@@ -11,7 +11,7 @@ RM=rm -rf
 .PHONY: all clean
 
 all: mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT)\
-	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT)
+	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT) mfile9$(EEXT)
 lfile1$(OEXT): lfile1.c
 	$(CC) -c $<
 lfile2$(OEXT): lfile2.c
@@ -36,6 +36,8 @@ mfile7$(OEXT): mfile7.c
 	$(CC) $(CFLAGS) -c $<
 mfile8$(OEXT): mfile8.c
 	$(CC) $(CFLAGS) -c $<
+mfile9$(OEXT): mfile9.c
+	$(CC) $(CFLAGS) -c $<
 mfile1$(EEXT): mfile1$(OEXT) lfile1$(OEXT)
 	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
 mfile2$(EEXT): mfile2$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
@@ -52,6 +54,8 @@ mfile7$(EEXT): mfile7$(OEXT)  lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(
 	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
 mfile8$(EEXT): mfile8$(OEXT)  lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
 	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
+mfile9$(EEXT): mfile9$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
+	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
 clean:
 	$(RM) *$(OEXT) mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT)\
-	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT)
+	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT) mfile9$(EEXT)
