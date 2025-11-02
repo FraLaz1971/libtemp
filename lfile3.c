@@ -158,7 +158,7 @@ int read_pds_file(int pdsver, char *fname,struct PDS *pds, int iftype,struct LOG
 			i++;
 		}
         print_log("ended reading image data",log,lfp);
-		pds->stchk->size = i-1;
+		pds->stchk->size = i;
 		snprintf(msg,512,"table rows: %lu, columns:%lu", pds->stchk->size,pds->stchk->ncols);
         print_log(msg,log,lfp);
 		fclose(ifp);
