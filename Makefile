@@ -1,61 +1,53 @@
-CC=gcc -g -O2
-LD=gcc
-CFLAGS=-I$(CFITSIO_HOME)/include
-LDFLAGS=-L$(CFITSIO_HOME)/lib
-LIBS=-lm
-CFITSIO_LIBS=-lcfitsio -lm
-OEXT=.o
-EEXT=
-RM=rm -rf
+# =========================================================
+#   Makefile.lnx — gcc / gnu make example
+# =========================================================
+# Build:
+#   make -f Makefile.lnx
+# Clean:
+#   make -f Makefile.lnx clean
+# =========================================================
 
-.PHONY: all clean
+# --- Tools ------------------------------------------------
+CC = gcc
+LIBTOOL = ar qv
+LD = gcc
+RM = rm -rf
+# --- Flags ------------------------------------------------
+#CFITSIO_HOME = /opt/NASA/cfitsio
+CFLAGS = -I$(CFITSIO_HOME)/include
+LDFLAGS =  
+LIBFLAGS = -L$(CFITSIO_HOME)/lib -lcfitsio
 
-all: mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) \
-	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT) mfile9$(EEXT)
-lfile1$(OEXT): lfile1.c
-	$(CC) -c $<
-lfile2$(OEXT): lfile2.c
-	$(CC) -c $<
-lfile3$(OEXT): lfile3.c
+# --- Sources ----------------------------------------------
+LIBSRCS = lfile1.c lfile2.c lfile3.c fimage.c
+LIBOBJS = $(LIBSRCS:.c=.o)
+
+# Build a static library named libfunc.a
+LIBTARGET = libfunc.a
+
+# Executables that use libfunc.a
+EXESRCS = mfile1.c mfile2.c mfile3.c mfile4.c mfile6.c mfile7.c mfile8.c mfile9.c
+EXEOBJS = $(EXESRCS:.c=.o)
+EXETARGETS = $(EXESRCS:.c=)
+
+# --- Default target ---------------------------------------
+all: $(LIBTARGET) $(EXEOBJS) $(EXETARGETS)
+
+# --- Library build rule -----------------------------------
+$(LIBTARGET): $(LIBOBJS)
+	$(LIBTOOL) -o $@ $(LIBOBJS)
+
+# --- Executables build rule -------------------------------
+# Use a pattern substitution to get corresponding .o names
+# for each .exe, e.g. mfile1.o -> mfile1.exe
+
+# --- Compile all .c to .o -------------------------------
+.c.o:
 	$(CC) $(CFLAGS) -c $<
-fimage$(OEXT): fimage.c
-	$(CC) $(CFLAGS) -c $<
-mfile1$(OEXT): mfile1.c
-	$(CC) -c $<
-mfile2$(OEXT): mfile2.c
-	$(CC) -c $<
-mfile3$(OEXT): mfile3.c
-	$(CC) -c $<
-mfile4$(OEXT): mfile4.c
-	$(CC) -c $<
-mfile5$(OEXT): mfile5.c
-	$(CC) $(CFLAGS) -c $<
-mfile6$(OEXT): mfile6.c
-	$(CC) $(CFLAGS) -c $<
-mfile7$(OEXT): mfile7.c
-	$(CC) $(CFLAGS) -c $<
-mfile8$(OEXT): mfile8.c
-	$(CC) $(CFLAGS) -c $<
-mfile9$(OEXT): mfile9.c
-	$(CC) $(CFLAGS) -c $<
-mfile1$(EEXT): mfile1$(OEXT) lfile1$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
-mfile2$(EEXT): mfile2$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
-mfile3$(EEXT): mfile3$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
-mfile4$(EEXT): mfile4$(OEXT) lfile1$(OEXT) lfile2$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(LIBS)
-mfile5$(EEXT): mfile5$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
-mfile6$(EEXT): mfile6$(OEXT)  lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
-mfile7$(EEXT): mfile7$(OEXT)  lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
-mfile8$(EEXT): mfile8$(OEXT)  lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
-mfile9$(EEXT): mfile9$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
-	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
+# --- Executables build rule -------------------------------
+.o:
+	$(LD) -o $@ $^ $(LIBTARGET) $(LDFLAGS) $(LIBFLAGS)
+
+# --- Clean target -----------------------------------------
 clean:
-	$(RM) *$(OEXT) mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) \
-	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT) mfile9$(EEXT)
+	$(RM) *.o $(EXETARGETS) *.a 
