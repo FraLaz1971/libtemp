@@ -10,7 +10,7 @@ RM=rm -rf
 
 .PHONY: all clean
 
-all: mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT)\
+all: mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) \
 	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT) mfile9$(EEXT)
 lfile1$(OEXT): lfile1.c
 	$(CC) -c $<
@@ -57,5 +57,5 @@ mfile8$(EEXT): mfile8$(OEXT)  lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(
 mfile9$(EEXT): mfile9$(OEXT) lfile1$(OEXT) lfile2$(OEXT) lfile3$(OEXT) fimage$(OEXT)
 	$(LD) $^ -o $@ $(LDFLAGS) $(CFITSIO_LIBS)
 clean:
-	$(RM) *$(OEXT) mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT)\
+	$(RM) *$(OEXT) mfile1$(EEXT) mfile2$(EEXT) mfile3$(EEXT) mfile4$(EEXT) \
 	mfile5$(EEXT) mfile6$(EEXT) mfile7$(EEXT) mfile8$(EEXT) mfile9$(EEXT)

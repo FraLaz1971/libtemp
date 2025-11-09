@@ -13,23 +13,25 @@ LIBTOOL = lib
 LINK = link
 
 # --- Flags ------------------------------------------------
-CFLAGS = /nologo /O2 /W3 /EHsc
-LDFLAGS = /nologo
-LIBFLAGS = /nologo
+CFITSIO_HOME = C:\cfitsio\cfitsiovc
+CFLAGS = /nologo /O2 /W3 /EHsc /D_CRT_SECURE_NO_WARNINGS /I$(CFITSIO_HOME)
+LDFLAGS = /nologo 
+LIBFLAGS = /nologo /LIBPATH:$(CFITSIO_HOME) cfitsio.lib
 
 # --- Sources ----------------------------------------------
-LIBSRCS = lfile1.c lfile2.c lfile3.c
+LIBSRCS = lfile1.c lfile2.c lfile3.c fimage.c
 LIBOBJS = $(LIBSRCS:.c=.obj)
 
 # Build a static library named func.lib
 LIBTARGET = func.lib
 
 # Executables that use func.lib
-EXESRCS = mfile1.c mfile2.c
+EXESRCS = mfile1.c mfile2.c mfile3.c mfile4.c mfile6.c mfile7.c mfile8.c mfile9.c
+EXEOBJS = $(EXESRCS:.c=.obj)
 EXETARGETS = $(EXESRCS:.c=.exe)
 
 # --- Default target ---------------------------------------
-all: $(LIBTARGET) $(EXETARGETS)
+all: $(LIBTARGET) $(EXEOBJS) $(EXETARGETS)
 
 # --- Library build rule -----------------------------------
 $(LIBTARGET): $(LIBOBJS)
@@ -38,12 +40,16 @@ $(LIBTARGET): $(LIBOBJS)
 # --- Executables build rule -------------------------------
 # Use a pattern substitution to get corresponding .obj names
 # for each .exe, e.g. mfile1.obj -> mfile1.exe
-{$(EXESRCS:.c=.obj)}.obj{}.exe:
-	$(LINK) $(LDFLAGS) /OUT:$@ $** $(LIBTARGET)
 
 # --- Compile all .c to .obj -------------------------------
 .c.obj:
 	$(CC) $(CFLAGS) /c $<
+# --- Executables build rule -------------------------------
+.obj.exe:
+	$(LINK) $(LDFLAGS) $(LIBFLAGS) /OUT:$@ $** $(LIBTARGET)
+
+
+
 
 # --- Clean target -----------------------------------------
 clean:
